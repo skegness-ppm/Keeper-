@@ -66,7 +66,20 @@ button{cursor:pointer}
 .cog{background:rgba(255,255,255,.12);border:0;border-radius:10px;width:40px;height:40px;display:grid;place-items:center;color:#fff;flex:none}
 .cog svg{width:20px;height:20px}
 .cogwrap .dotn{position:absolute;top:-3px;right:-3px;background:var(--band-text);color:#1C2129;font-size:11px;font-weight:700;border-radius:999px;min-width:18px;height:18px;display:grid;place-items:center;padding:0 4px}
-.cogwrap{position:relative}
+.cogwrap{position:relative;display:flex;gap:8px}
+.cogwrap[hidden]{display:none}
+#guide .card{scroll-margin-top:12px}
+.gjump{display:flex;flex-wrap:wrap;gap:6px}
+.gjump a{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:14px;color:var(--ink);text-decoration:none}
+.gsteps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;color:var(--ink)}
+.gkey{display:grid;grid-template-columns:auto 1fr;gap:10px 12px;align-items:center;font-size:15px}
+.gkey .k{display:flex;align-items:center;justify-content:center;min-width:44px}
+.gkey .k svg{width:18px;height:18px}
+.gicons{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.gicons div{display:flex;align-items:center;gap:8px;font-size:14px}
+.gicons .dotc{width:32px;height:32px;flex:none}
+.gsub{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;margin:4px 0 -4px}
+.guide-tip{background:var(--info-soft);color:var(--info);border-radius:10px;padding:10px 12px;font-size:14px}
 
 /* main switch */
 .seg{display:grid;grid-template-columns:1fr 1fr;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px}
@@ -166,6 +179,22 @@ button{cursor:pointer}
 .linkbtn{background:none;border:0;padding:0;color:var(--muted);text-decoration:underline;font-size:14px;align-self:flex-start}
 .hint{background:var(--info-soft);color:var(--info);border-radius:10px;padding:10px 12px;font-size:14px}
 .switch{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.rem{display:flex;flex-direction:column;gap:10px}
+.rem .remrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.rem .remlab{flex:0 0 100%;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.rem .chip{font-size:14px;padding:7px 13px;color:var(--ink);display:inline-flex;align-items:center;gap:5px}
+.rem .chip svg{width:14px;height:14px}
+.rem .chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.rem .chip[data-rv="off"][aria-pressed="true"]{background:var(--surface-2);color:var(--muted);border-color:var(--line)}
+.rem .remhint{font-size:13px;color:var(--soon);background:var(--soon-soft);border-radius:8px;padding:7px 10px}
+.rem .remhint:empty{display:none}
+.rem .linkish{background:none;border:0;padding:4px 2px;color:var(--info);font-size:14px;text-decoration:underline;text-underline-offset:2px}
+.add .rem{border-top:1px dashed var(--line);padding-top:10px}
+.cform{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cform .field:first-child{grid-column:1/-1}
+.cform .acts{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap}
+@media(max-width:480px){.cform{grid-template-columns:1fr}}
+.field input[type=password]{font-family:inherit}
 .switch input{width:22px;height:22px;accent-color:var(--accent)}
 .person{display:grid;grid-template-columns:1fr auto;gap:8px 12px;align-items:center;padding:12px;border-top:1px solid var(--line)}
 @media (max-width:520px){.person{grid-template-columns:1fr}.person .acts{justify-content:flex-start}}
@@ -193,6 +222,37 @@ button{cursor:pointer}
 :root{--amber:#B87503;--amber-soft:#F7EBD2;--green:#2E7D4F;--red:#B3372F;--grey:#7A828E}
 @media (prefers-color-scheme: dark){:root{--amber:#E6B45A;--amber-soft:#352A14;--green:#7CCB98;--red:#F08A80;--grey:#8E96A1}}
 .seg.three{grid-template-columns:1fr 1fr 1fr}
+.seg.four{grid-template-columns:repeat(4,1fr)}
+.seg.four button{padding:9px 4px;font-size:15px}
+.calbox{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px}
+.calhead{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.calhead h2{flex:1;margin:0;text-align:center;font-family:var(--display);font-size:20px}
+.calnav{width:38px;height:38px;border:1px solid var(--line);background:var(--surface-2);border-radius:10px;font-size:22px;line-height:1;color:var(--ink)}
+.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.calgrid .dow{font-size:11px;text-align:center;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;padding:2px 0}
+.cday{min-height:52px;border:1px solid transparent;background:var(--surface-2);border-radius:8px;padding:4px 2px;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--ink);font-size:14px;font-variant-numeric:tabular-nums}
+.cday.out{opacity:.4}
+.cday.today .n{background:var(--accent);color:var(--accent-ink);border-radius:999px;min-width:24px;height:24px;display:grid;place-items:center;font-weight:700}
+.cday[aria-selected="true"]{border-color:var(--ink);background:var(--surface)}
+.cday .dots{display:flex;gap:3px;flex-wrap:wrap;justify-content:center;max-width:100%}
+.cday .dots i,.calkey i{width:7px;height:7px;border-radius:50%;display:inline-block}
+.cday .more{font-size:10px;color:var(--muted);line-height:1}
+i.ce{background:var(--info)} i.cj{background:var(--amber)} i.cd{background:var(--ok)} i.co{background:var(--over)}
+.calkey{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:8px;padding:0 2px}
+.calkey span{display:inline-flex;align-items:center;gap:5px}
+.calacts{display:flex;gap:8px;flex-wrap:wrap}.calacts .btn{flex:1 1 150px}
+.crow{display:grid;grid-template-columns:58px 1fr auto;gap:10px;align-items:center;padding:11px 12px;border-top:1px solid var(--line);width:100%;background:none;border-left:0;border-right:0;border-bottom:0;text-align:left;color:var(--ink);font:inherit}
+.list .crow:first-child{border-top:0}
+.crow .tm{font-size:13px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums;line-height:1.25}
+.crow.ev{box-shadow:inset 4px 0 0 var(--info)} .crow.jb{box-shadow:inset 4px 0 0 var(--amber)} .crow.dn{box-shadow:inset 4px 0 0 var(--ok)} .crow.ov{box-shadow:inset 4px 0 0 var(--over)}
+.crow.proj{opacity:.7}
+.calchk{display:flex!important;flex-direction:row!important;align-items:center;gap:8px;text-transform:none!important;letter-spacing:0!important;font-size:15px!important;color:var(--ink)!important}
+.calchk input{width:20px;height:20px;accent-color:var(--accent)}
+.sheet textarea{border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:10px 12px;font:inherit;font-size:16px;color:var(--ink);min-height:70px;resize:vertical}
+.bringlist{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.bringlist button{display:flex;justify-content:space-between;gap:10px;text-align:left;border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:10px 12px;color:var(--ink);font:inherit}
+.bringlist button small{color:var(--muted);white-space:nowrap}
+.calicon{display:inline-flex;align-items:center;gap:3px}.calicon svg{width:13px;height:13px}
 .floors{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
 .floors::-webkit-scrollbar{display:none}
 .floor{flex:none;display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 12px;font-weight:600;font-size:14px;color:var(--muted)}
@@ -278,7 +338,8 @@ details.unplaced summary{cursor:pointer;font-size:12px;text-transform:uppercase;
       <h1 class="brand" aria-label="WolstenHOLME Keeper"><span class="ghost">Wolsten</span><span class="holme">HOLME</span></h1>
       <div class="keeper" aria-hidden="true">Keeper</div>
     </div>
-    <div class="cogwrap" id="cogwrap" hidden>
+ <div class="cogwrap" id="cogwrap" hidden>
+      <button class="cog" id="helpBtn" type="button" aria-label="Guide: how to use the app"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.3a2.6 2.6 0 0 1 5 .9c0 1.7-2.5 2.3-2.5 3.8"/><circle cx="12" cy="17.2" r=".6" fill="currentColor"/></svg></button>
       <button class="cog" id="cogBtn" type="button" aria-label="Settings and people">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
       </button>
@@ -339,6 +400,18 @@ details.unplaced summary{cursor:pointer;font-size:12px;text-transform:uppercase;
         <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" type="submit">Save</button><button class="btn ghost" type="button" id="testMail">Send a test email</button></div>
       </form>
     </div>
+    <div class="card" id="contactsCard" style="margin-top:18px">
+      <h2>Contacts</h2>
+      <p>Save people once, then pick them when you set a job's reminders. Everyone using the app sees this list.</p>
+      <div id="contactList"></div>
+      <form id="contactForm" class="cform" autocomplete="off">
+        <input type="hidden" id="cId">
+        <label class="field">Name<input id="cName" maxlength="40" placeholder="e.g. Rik"></label>
+        <label class="field">Email<input id="cEmail" type="email" maxlength="120" placeholder="name@gmail.com" autocapitalize="off"></label>
+        <label class="field">Mobile (optional, for reference)<input id="cPhone" type="tel" maxlength="30" placeholder="07…"></label>
+        <div class="acts"><button class="btn" type="submit" id="cSave">Add contact</button><button class="btn ghost" type="button" id="cCancel" hidden>Cancel</button><button class="btn ghost" type="button" id="cMe" hidden>Add me</button></div>
+      </form>
+    </div>
     <div class="card" id="peopleCard" hidden style="margin-top:18px">
       <h2>People</h2>
       <p>Only people you approve can open the list. Check the code on their screen matches before approving.</p>
@@ -349,10 +422,14 @@ details.unplaced summary{cursor:pointer;font-size:12px;text-transform:uppercase;
     <div style="margin-top:18px"><button class="btn ghost" id="closeSettings" type="button">Back to the list</button></div>
   </section>
 
+  <!-- ============ GUIDE ============ -->
+  <section id="guide" hidden style="flex-direction:column;gap:14px"></section>
+
   <!-- ============ APP ============ -->
   <main id="app" hidden style="display:flex;flex-direction:column;gap:18px">
-    <div class="seg three" role="tablist" aria-label="Section">
+    <div class="seg four" role="tablist" aria-label="Section">
       <button role="tab" data-view="jobs" aria-selected="true">Jobs</button>
+      <button role="tab" data-view="cal" aria-selected="false">Calendar</button>
       <button role="tab" data-view="map" aria-selected="false">Map</button>
       <button role="tab" data-view="bills" aria-selected="false">Bills</button>
     </div>
@@ -374,7 +451,9 @@ details.unplaced summary{cursor:pointer;font-size:12px;text-transform:uppercase;
           <label>Area <select id="addCat"></select></label>
           <label>Repeats <select id="addRep"></select></label>
           <label>Due <input type="date" id="addDue"></label>
+          <label><input type="checkbox" id="addCal" style="width:18px;height:18px;accent-color:var(--accent)"> Show on calendar</label>
         </div>
+        <div id="addRem"></div>
       </form>
       <div class="tabs" role="tablist">
         <button class="tab" role="tab" data-tab="todo" aria-selected="true">To do<span class="n" id="n-todo"></span></button>
@@ -407,6 +486,18 @@ details.unplaced summary{cursor:pointer;font-size:12px;text-transform:uppercase;
       <div class="filters" id="billFilters"></div>
       <div id="billList"></div>
       <p class="note">Never put account numbers, sort codes, card numbers or passwords in here. Names, amounts and dates are all it needs.</p>
+    </div>
+
+    <!-- CALENDAR -->
+    <div id="v-cal" hidden style="display:flex;flex-direction:column;gap:14px">
+      <div class="calbox">
+        <div class="calhead"><button class="calnav" type="button" id="calPrev" aria-label="Previous month">&lsaquo;</button><h2 id="calTitle"></h2><button class="calnav" type="button" id="calNext" aria-label="Next month">&rsaquo;</button><button class="mini" type="button" id="calToday">Today</button></div>
+        <div class="calgrid" id="calGrid" role="grid"></div>
+        <div class="calkey"><span><i class="ce"></i>Appointment</span><span><i class="cj"></i>Job</span><span><i class="cd"></i>Job done</span></div>
+      </div>
+      <div class="calacts"><button class="btn" type="button" id="calAdd">Add appointment</button><button class="btn ghost" type="button" id="calBring">Bring a job across</button></div>
+      <div id="calDay"></div>
+      <div id="calSoon"></div>
     </div>
 
     <!-- MAP -->
@@ -457,9 +548,13 @@ details.unplaced summary{cursor:pointer;font-size:12px;text-transform:uppercase;
 <script>
 /* ---------- constants ---------- */
 const CATS=["House","Garden","Garage","Kids","Admin & money","Other"];
-const REPS={once:"One-off",weekly:"Weekly",fortnightly:"Every 2 weeks",monthly:"Monthly",quarterly:"Every 3 months",seasonal:"Seasonal (yearly)",annual:"Annually"};
+const REPS={once:"One-off",weekly:"Weekly",fortnightly:"Every 2 weeks","4weekly":"Every 4 weeks",monthly:"Monthly",quarterly:"Every 3 months",seasonal:"Seasonal (yearly)",annual:"Annually"};
 const SEASONS=["","Spring","Summer","Autumn","Winter"];
-const JOB_REMIND=[["","Off"],["0","On the day"],["7,0","1 week before and on the day"],["14","2 weeks before"],["28,14","4 weeks and 2 weeks before"]];
+const REM_WHEN=[["30","1 month"],["14","2 weeks"],["7","1 week"],["3","3 days"],["1","1 day"],["0","On the day"]];
+const REM_DEFAULT="7,1,0";
+const EREPS={once:"Doesn't repeat",weekly:"Every week",fortnightly:"Every 2 weeks","4weekly":"Every 4 weeks",monthly:"Every month",annual:"Every year"};
+const calSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>';
+const mailSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>';
 const BFREQ={monthly:"Monthly",weekly:"Weekly",fortnightly:"Every 2 weeks","4weekly":"Every 4 weeks",quarterly:"Every 3 months",annual:"Yearly",once:"One-off"};
 const BCATS=["Home","Energy","Water","Council tax","Phone & internet","Insurance","Car","Subscriptions","Kids","Other"];
 const BILL_REMIND=[["","Off"],["3,0","3 days before and on the day"],["7,0","1 week before and on the day"],["0","On the day"]];
@@ -467,7 +562,7 @@ const bellSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
 const check='<svg viewBox="0 0 16 16" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3L13 4.5"/></svg>';
 
 /* ---------- state ---------- */
-let KEY=null, me=null, items=[], bills=[], people=null, view="jobs", tab="todo", cat="All", bfilter="Active";
+let KEY=null, me=null, items=[], bills=[], people=null, contacts=[], events=[], calMonth=null, calSel=null, view="jobs", tab="todo", cat="All", bfilter="Active";
 let openId=null, openBill=null, undoState=null, toastTimer=null, busy=false, pollTimer=null;
 
 /* ---------- helpers ---------- */
@@ -485,9 +580,7 @@ function addInterval(s,rep){const d=parse(s);
   if(rep==="weekly")d.setDate(d.getDate()+7);
   else if(rep==="fortnightly")d.setDate(d.getDate()+14);
   else if(rep==="4weekly")d.setDate(d.getDate()+28);
-  else if(rep==="monthly")d.setMonth(d.getMonth()+1);
-  else if(rep==="quarterly")d.setMonth(d.getMonth()+3);
-  else d.setFullYear(d.getFullYear()+1);
+  else{const m=rep==="monthly"?1:rep==="quarterly"?3:12,day=d.getDate();d.setDate(1);d.setMonth(d.getMonth()+m);d.setDate(Math.min(day,new Date(d.getFullYear(),d.getMonth()+1,0).getDate()))}
   return iso(d)}
 function dueInfo(date){
   if(!date)return{cls:"later",label:"No date",key:"nodate",n:99999};
@@ -570,6 +663,7 @@ function clearErr(){$("#banner").hidden=true}
 function setData(j){
   clearErr();
   if(j.me)me=j.me; items=j.items||items; bills=j.bills||bills; people=j.people||null;
+  if(j.contacts)contacts=j.contacts; if(j.events)events=j.events;
   oldBackend=items.length>0&&!items.some(i=>Object.prototype.hasOwnProperty.call(i,"map"));
   if(openId&&!items.some(i=>i.id===openId))openId=null;
   if(openBill&&!bills.some(b=>b.id===openBill))openBill=null;
@@ -583,7 +677,7 @@ async function refresh(){
 }
 
 /* ---------- screens ---------- */
-function show(id){["g-config","g-loading","g-request","g-pending","g-denied","settings","app"].forEach(x=>{$("#"+x).hidden=x!==id});$("#cogwrap").hidden=!(id==="app"||id==="settings")}
+function show(id){["g-config","g-loading","g-request","g-pending","g-denied","settings","guide","app"].forEach(x=>{$("#"+x).hidden=x!==id});$("#cogwrap").hidden=!(id==="app"||id==="settings"||id==="guide");$("#guide").style.display=id==="guide"?"flex":"none"}
 function route(state,code){
   clearInterval(pollTimer);
   if(state==="approved"){show("app");$("#app").style.display="flex";start();return}
@@ -629,6 +723,7 @@ $("#closeSettings").addEventListener("click",()=>{show("app");render()});
 function renderSettings(){
   if(!me)return;
   $("#meName").value=me.name||"";$("#meEmail").value=me.email||"";$("#meEmails").checked=!!me.emails;
+  renderContacts();
   $("#peopleCard").hidden=!people;
   if(!people)return;
   const order={pending:0,approved:1,denied:2,removed:3};
@@ -670,6 +765,101 @@ $("#testMail").addEventListener("click",async()=>{try{await api("testEmail");toa
 /* ---------- main switch ---------- */
 document.querySelector(".seg").addEventListener("click",e=>{const b=e.target.closest("[data-view]");if(!b)return;view=b.dataset.view;openId=openBill=null;mapMode=null;moveOn=false;selPin=null;render()});
 
+/* ---------- reminder picker (who, how, when) ---------- */
+function myContact(){if(!me)return null;const e=(me.email||"").toLowerCase();return contacts.find(c=>e&&(c.email||"").toLowerCase()===e)||contacts.find(c=>(c.name||"").toLowerCase()===(me.name||"").toLowerCase())||null}
+function remState(i){
+  const on=i&&i.notify==="yes";
+  return{by:on?(i.remindBy||"email").split(",").filter(Boolean):[],days:on?String(i.remindDays||"0").split(",").filter(x=>x!==""):[],to:on?String(i.remindTo||"").split(",").filter(Boolean):[]};
+}
+function remPicker(st,def){
+  const on=st.by.length>0;
+  const chip=(k,v,label,pressed)=>`<button class="chip" type="button" data-rk="${k}" data-rv="${esc(v)}" aria-pressed="${pressed}">${label}</button>`;
+  const known=contacts.map(c=>c.id),to=st.to.filter(id=>known.indexOf(id)>=0);
+  return `<div class="rem" data-rem data-def="${esc(def||REM_DEFAULT)}">
+    <div class="remrow"><span class="remlab">Email reminders</span>${chip("by","off","Off",!on)}${chip("by","email",mailSvg+"On",on)}</div>
+    <div class="remrow" data-remon${on?"":" hidden"}><span class="remlab">When (pick as many as you like)</span>${REM_WHEN.map(w=>chip("day",w[0],w[1],st.days.indexOf(w[0])>=0)).join("")}</div>
+    <div class="remrow" data-remon${on?"":" hidden"}><span class="remlab">Who</span>${contacts.map(c=>chip("to",c.id,esc(c.name),to.indexOf(c.id)>=0)).join("")}<button type="button" class="linkish" data-rk="contacts">${contacts.length?"Edit contacts":"Add contacts"}</button></div>
+    <div class="remhint" data-remhint${on?"":" hidden"}></div>
+  </div>`;
+}
+function remRead(root){
+  const r=root&&root.querySelector("[data-rem]");if(!r)return{notify:"",remindDays:"",remindBy:"",remindTo:""};
+  const pick=k=>Array.from(r.querySelectorAll(`[data-rk="${k}"][aria-pressed="true"]`)).map(b=>b.dataset.rv);
+  const by=pick("by").filter(v=>v!=="off");
+  if(!by.length)return{notify:"",remindDays:"",remindBy:"",remindTo:""};
+  return{notify:"yes",remindDays:(pick("day").join(",")||"0"),remindBy:"email",remindTo:pick("to").join(",")};
+}
+function remSync(r){
+  const v=remRead(r.parentNode),on=!!v.notify;
+  r.querySelectorAll("[data-remon]").forEach(el=>el.hidden=!on);
+  const h=r.querySelector("[data-remhint]");h.hidden=!on;
+  const msgs=[],to=v.remindTo.split(",").filter(Boolean).map(id=>contacts.find(c=>c.id===id)).filter(Boolean);
+  if(on){
+    if(!contacts.length)msgs.push("No contacts yet, so this goes by email to everyone with reminder emails on. Add contacts to choose who gets it.");
+    else if(!to.length)msgs.push("Nobody picked: it goes by email to everyone with reminder emails switched on.");
+    if(v.remindBy.indexOf("email")>=0){const noMail=to.filter(c=>!c.email).map(c=>c.name);if(noMail.length)msgs.push(noMail.join(" and ")+" has no email saved.")}
+    const due=r.closest("form")&&r.closest("form").querySelector('input[type=date]');
+    if(due&&!due.value)msgs.push("Set a date: reminders count back from it.");
+  }
+  h.textContent=msgs.join(" ");
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-rk]");if(!b)return;const r=b.closest("[data-rem]");if(!r)return;
+  const k=b.dataset.rk;
+  if(k==="contacts"){openContacts();return}
+  const flip=el=>el.setAttribute("aria-pressed",String(el.getAttribute("aria-pressed")!=="true"));
+  if(k==="by"){
+    const off=r.querySelector('[data-rk="by"][data-rv="off"]');
+    if(b.dataset.rv==="off"){r.querySelectorAll('[data-rk="by"]').forEach(x=>x.setAttribute("aria-pressed",String(x===off)))}
+    else{
+      const wasOn=!!remRead(r.parentNode).notify;
+      flip(b);const any=r.querySelectorAll('[data-rk="by"]:not([data-rv="off"])[aria-pressed="true"]').length;off.setAttribute("aria-pressed",String(!any));
+      if(any&&!wasOn){ // first switch-on: sensible defaults
+        if(!r.querySelector('[data-rk="day"][aria-pressed="true"]'))(r.dataset.def||REM_DEFAULT).split(",").forEach(d=>{const x=r.querySelector(`[data-rk="day"][data-rv="${d}"]`);if(x)x.setAttribute("aria-pressed","true")});
+        if(!r.querySelector('[data-rk="to"][aria-pressed="true"]')){const m=myContact()||(contacts.length===1?contacts[0]:null);if(m){const x=r.querySelector(`[data-rk="to"][data-rv="${CSS.escape(m.id)}"]`);if(x)x.setAttribute("aria-pressed","true")}}
+      }
+    }
+  }else flip(b);
+  remSync(r);
+});
+document.addEventListener("change",e=>{if(e.target.type==="date"){const f=e.target.closest("form");const r=f&&f.querySelector("[data-rem]");if(r)remSync(r)}});
+function remSummary(i){
+  if(i.notify!=="yes")return"";
+  const how="Email";
+  const names=String(i.remindTo||"").split(",").map(id=>contacts.find(c=>c.id===id)).filter(Boolean).map(c=>c.name.split(" ")[0]);
+  return `<span class="bell" title="Reminders on">${bellSvg}${how}${names.length?" · "+esc(names.join(", ")):""}</span>`;
+}
+function renderAddRem(){const h=$("#addRem");if(!h)return;const keep=h.querySelector("[data-rem]")?remRead(h):null;
+  h.innerHTML=remPicker(keep&&keep.notify?{by:keep.remindBy.split(","),days:keep.remindDays.split(","),to:keep.remindTo.split(",").filter(Boolean)}:{by:[],days:[],to:[]});remSync(h.querySelector("[data-rem]"))}
+
+/* ---------- contacts ---------- */
+function openContacts(){renderSettings();show("settings");setTimeout(()=>{const c=$("#contactsCard");if(c)c.scrollIntoView({behavior:"smooth",block:"start"});if(!contacts.length)$("#cName").focus()},60)}
+function renderContacts(){
+  $("#contactList").innerHTML=contacts.length?`<div class="list">${contacts.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(c=>
+    `<div class="person"><div class="who"><div class="title">${esc(c.name)}</div><div class="meta">${[c.email?esc(c.email):"",c.phone?esc(c.phone):""].filter(Boolean).join(" · ")}</div></div>
+    <div class="acts"><button class="mini" type="button" data-c="edit" data-id="${esc(c.id)}">Edit</button>${c.email?`<button class="mini" type="button" data-c="email" data-id="${esc(c.id)}">Test email</button>`:""}<button class="mini" type="button" data-c="del" data-id="${esc(c.id)}">Delete</button></div></div>`).join("")}</div>`
+    :'<p class="note">No contacts yet. Add yourself first, then anyone else who should get reminders.</p>';
+  const mine=myContact();$("#cMe").hidden=!!mine||!me||!!$("#cId").value;
+}
+function contactFormReset(){$("#cId").value="";$("#cName").value="";$("#cEmail").value="";$("#cPhone").value="";$("#cSave").textContent="Add contact";$("#cCancel").hidden=true;renderContacts()}
+$("#cMe").addEventListener("click",()=>{$("#cName").value=me.name||"";$("#cEmail").value=me.email||"";$("#cPhone").focus()});
+$("#cCancel").addEventListener("click",contactFormReset);
+$("#contactForm").addEventListener("submit",async e=>{
+  e.preventDefault();const name=$("#cName").value.trim();if(!name){$("#cName").focus();return}
+  const c={id:$("#cId").value,name,email:$("#cEmail").value.trim(),phone:$("#cPhone").value.trim()};
+  if(!c.email){toast("Add an email so reminders can reach them");$("#cEmail").focus();return}
+  if(await run("saveContact",{contact:c})){toast(c.id?"Contact saved":"Added "+name);contactFormReset()}
+});
+$("#contactList").addEventListener("click",async e=>{
+  const b=e.target.closest("[data-c]");if(!b)return;const c=contacts.find(x=>x.id===b.dataset.id);if(!c)return;
+  if(b.dataset.c==="edit"){$("#cId").value=c.id;$("#cName").value=c.name;$("#cEmail").value=c.email||"";$("#cPhone").value=c.phone||"";$("#cSave").textContent="Save changes";$("#cCancel").hidden=false;$("#cMe").hidden=true;$("#cName").focus();return}
+  if(b.dataset.c==="del"){const used=items.filter(i=>String(i.remindTo||"").split(",").indexOf(c.id)>=0).length;
+    if(!confirm("Delete "+c.name+"?"+(used?" They're picked on "+used+" job"+(used>1?"s":"")+", which will stop reminding them.":"")))return;
+    if(await run("deleteContact",{id:c.id}))toast(c.name+" deleted");return}
+  b.disabled=true;
+  try{await api("testContact",{id:c.id,how:"email"});toast("Test email sent to "+c.name)}catch(err){showErr(err)}
+  b.disabled=false;
+});
 /* ---------- render ---------- */
 opts($("#addCat"),CATS.map(c=>[c,c]),"House");
 opts($("#addRep"),Object.entries(REPS),"once");
@@ -677,10 +867,10 @@ opts($("#billFreq"),Object.entries(BFREQ),"monthly");
 
 function render(){
   document.querySelectorAll(".seg [data-view]").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.view===view)));
-  $("#v-jobs").hidden=view!=="jobs";$("#v-bills").hidden=view!=="bills";$("#v-map").hidden=view!=="map";
+  $("#v-jobs").hidden=view!=="jobs";$("#v-bills").hidden=view!=="bills";$("#v-map").hidden=view!=="map";$("#v-cal").hidden=view!=="cal";
   const waiting=(people||[]).filter(p=>p.status==="pending").length;
   $("#cogCount").hidden=!waiting;$("#cogCount").textContent=waiting;
-  if(view==="jobs")renderJobs();else if(view==="map")renderMap();else renderBills();
+  if(view==="jobs"){renderJobs();renderAddRem()}else if(view==="map")renderMap();else if(view==="cal")renderCal();else renderBills();
   if(!$("#settings").hidden)renderSettings();
 }
 
@@ -707,11 +897,11 @@ function renderJobs(){
     let html="";
     groups.forEach(g=>{const l=list.filter(x=>x.d.key===g[0]);if(!l.length)return;
       html+=`<section class="group"><h2><span class="dot" style="background:${g[2]}"></span>${g[1]} · ${l.length}</h2><div class="list">${l.map(x=>jobRow(x.i,x.d)).join("")}</div></section>`});
-    v.innerHTML=html||'<div class="list"><div class="empty">Nothing to do here. Add a job above.</div></div>';
+    v.innerHTML=html||'<div class="list"><div class="empty">Nothing to do here. Add a job above.</div></div>';syncOpenRem();
   }else if(tab==="hold"){
     const list=byCat(hold).sort((a,b)=>a.title.localeCompare(b.title));
     v.innerHTML=list.length?`<section class="group"><h2>On hold · no reminders until you resume them</h2><div class="list">${list.map(i=>jobRow(i,{cls:"hold",label:"On hold"})).join("")}</div></section>`
-      :'<div class="list"><div class="empty">Nothing on hold. Tap <b>Hold</b> on any job to stop it appearing in reminders.</div></div>';
+      :'<div class="list"><div class="empty">Nothing on hold. Tap <b>Hold</b> on any job to stop it appearing in reminders.</div></div>';syncOpenRem();
   }else{
     const done=byCat(items.filter(i=>i.status==="done")).sort((a,b)=>(b.completedAt||"").localeCompare(a.completedAt||""));
     const lg=log.filter(h=>cat==="All"||h.item.category===cat);
@@ -721,12 +911,14 @@ function renderJobs(){
     v.innerHTML=html;
   }
 }
+function syncOpenRem(){document.querySelectorAll("#jobList [data-rem]").forEach(remSync)}
 function jobRow(i,d){
   const isDone=i.status==="done",isHold=i.status==="onhold";
   const bits=[esc(i.category),esc(REPS[i.repeat]||"")];
   if(i.repeat==="seasonal"&&i.season)bits[1]+=" · "+esc(i.season);
   if(i.lastDone)bits.push("Last done "+esc(fmt(i.lastDone)));
-  if(i.notify==="yes")bits.push(`<span class="bell" title="Reminders on">${bellSvg}Reminder</span>`);
+  if(i.notify==="yes")bits.push(remSummary(i));
+  if(i.cal==="yes")bits.push(`<span class="calicon">${calSvg}Calendar${i.calTime?" "+esc(i.calTime):""}</span>`);
   const pp=pinPos(i);if(pp&&!isDone)bits.push(`<span class="roomtag">${pinMark}${esc(roomAt(pp.map,pp.x,pp.y))}</span>`);
   const side=isDone?'<button class="mini" data-act="reopen" type="button">Reopen</button>':isHold?'<button class="mini" data-act="resume" type="button">Resume</button>':'<button class="mini" data-act="hold" type="button">Hold</button>';
   return `<div class="item s-${d.cls}" data-id="${esc(i.id)}"><div class="row">
@@ -742,10 +934,12 @@ function jobEdit(i){
     <label>Repeats<select id="e-rep-${id}" name="repeat">${optHTML(Object.entries(REPS),i.repeat)}</select></label>
     <label>Next due<input type="date" id="e-due-${id}" name="dueDate" value="${esc(i.dueDate||"")}"></label>
     <label>Season (seasonal jobs)<select id="e-sea-${id}" name="season">${optHTML(SEASONS.map(s=>[s,s||"—"]),i.season)}</select></label>
-    <label class="full">Reminder emails<select id="e-rem-${id}" name="remind">${optHTML(JOB_REMIND,i.notify==="yes"?(i.remindDays||"0"):"")}</select></label>
+    <label class="full calchk"><input type="checkbox" name="cal"${i.cal==="yes"?" checked":""}> Show on the calendar</label>
+    <label>Time on calendar (optional)<input type="time" name="calTime" value="${esc(i.calTime||"")}"></label>
+    <div class="full">${remPicker(remState(i))}</div>
     <label class="full">Notes<textarea id="e-note-${id}" name="note" maxlength="2000" placeholder="Who to call, parts needed, costs…">${esc(i.note||"")}</textarea></label>
     <div class="hist">${hist.length?"Done "+hist.length+" time"+(hist.length>1?"s":"")+":<ul>"+hist.slice(0,8).map(h=>"<li>"+esc(fmt(h.date))+(h.by?" · "+esc(h.by):"")+"</li>").join("")+"</ul>":"Not done yet."}</div>
-    <div class="actions"><button class="btn" type="submit">Save changes</button><button class="btn ghost" type="button" data-act="cancel">Close</button>${i.status!=="done"?`<button class="btn ghost" type="button" data-act="map">${pinPos(i)?"Show on map":"Put on map"}</button>`:""}<span class="spacer"></span>
+    <div class="actions"><button class="btn" type="submit">Save changes</button><button class="btn ghost" type="button" data-act="cancel">Close</button>${i.status!=="done"?`<button class="btn ghost" type="button" data-act="remindnow">Remind now</button>`:""}${i.status!=="done"?`<button class="btn ghost" type="button" data-act="map">${pinPos(i)?"Show on map":"Put on map"}</button>`:""}<span class="spacer"></span>
     <button class="btn ghost" type="button" data-act="askdel">Delete</button><span data-confirm hidden><span class="note">Delete for good?</span> <button class="btn danger" type="button" data-act="del">Yes, delete</button></span></div></form>`;
 }
 
@@ -809,6 +1003,7 @@ function billEdit(b){
 function toast(msg,undo){undoState=undo||null;$("#toastMsg").textContent=msg;$("#toastUndo").hidden=!undo;$("#toast").hidden=false;
   clearTimeout(toastTimer);toastTimer=setTimeout(()=>{$("#toast").hidden=true;undoState=null},6000)}
 $("#toastUndo").addEventListener("click",async()=>{if(!undoState)return;const u=undoState;undoState=null;$("#toast").hidden=true;
+  if(u.kind==="event"){await run("saveEvent",{event:u.prev});return}
   await run(u.kind==="bill"?"saveBill":"saveItem",u.kind==="bill"?{bill:u.prev}:{item:u.prev})});
 
 async function markDone(i){
@@ -830,6 +1025,10 @@ $("#jobList").addEventListener("click",async e=>{
   if(a==="cancel"){openId=null;render();return}
   if(a==="askdel"){el.querySelector("[data-confirm]").hidden=false;btn.hidden=true;return}
   if(a==="done")return markDone(i);
+  if(a==="remindnow"){const v=remRead(el);btn.disabled=true;
+    try{const j=await api("remindNow",{id:i.id,by:v.remindBy||"email",to:v.remindTo});
+      toast("Reminder emailed to "+j.emails+(j.emails>1?" people":" person"))}
+    catch(err){showErr(err)} btn.disabled=false;return}
   if(a==="map"){openId=null;view="map";const p=pinPos(i);if(p){curMap=p.map;render();setTimeout(()=>{focusPin(i.id);openPin(i.id)},80)}else{mapMode={id:i.id};moveOn=false;render()}window.scrollTo({top:0,behavior:"smooth"});return}
   if(a==="hold")return setStatus(i,"onhold",`"${i.title}" on hold`);
   if(a==="resume")return setStatus(i,"active",`"${i.title}" back on the list`);
@@ -844,17 +1043,16 @@ $("#jobList").addEventListener("submit",async e=>{
   const title=String(fd.get("title")||"").trim();if(!title)return;
   const note=String(fd.get("note")||"");
   if(!(await confirmSensitive(title+"\n"+note)))return;
-  const rem=String(fd.get("remind")||"");
-  const next=clone(i);Object.assign(next,{title,category:fd.get("category"),repeat:fd.get("repeat"),dueDate:fd.get("dueDate")||"",season:fd.get("season")||"",note,notify:rem?"yes":"",remindDays:rem});
+  const next=clone(i);Object.assign(next,{title,category:fd.get("category"),repeat:fd.get("repeat"),dueDate:fd.get("dueDate")||"",season:fd.get("season")||"",note,cal:fd.get("cal")?"yes":"",calTime:fd.get("cal")?(fd.get("calTime")||""):""},remRead(f));
   openId=null;if(await run("saveItem",{item:next}))toast("Saved");
 });
 $("#addForm").addEventListener("submit",async e=>{
   e.preventDefault();
   const title=$("#addTitle").value.trim();if(!title){$("#addTitle").focus();return}
   if(!(await confirmSensitive(title)))return $("#addTitle").focus();
-  const it={id:"",title,category:$("#addCat").value,repeat:$("#addRep").value,dueDate:$("#addDue").value||"",season:"",note:"",status:"active",history:[],lastDone:"",completedAt:"",notify:"",remindDays:""};
+  const it=Object.assign({id:"",title,category:$("#addCat").value,repeat:$("#addRep").value,dueDate:$("#addDue").value||"",season:"",note:"",status:"active",history:[],lastDone:"",completedAt:"",cal:$("#addCal").checked?"yes":"",calTime:""},remRead($("#addRem")));
   $("#addBtn").disabled=true;
-  if(await run("saveItem",{item:it})){$("#addTitle").value="";$("#addDue").value="";tab="todo";render();toast(`Added "${title}"`)}
+  if(await run("saveItem",{item:it})){$("#addTitle").value="";$("#addDue").value="";$("#addRem").innerHTML="";$("#addCal").checked=false;tab="todo";render();toast(`Added "${title}"`+(it.notify?" with reminders":""))}
   $("#addBtn").disabled=false;$("#addTitle").focus();
 });
 
@@ -1145,7 +1343,7 @@ function openPin(id){
   const p=pinPos(i),l=light(i),hold=i.status==="onhold";
   const bits=[p?esc(roomAt(p.map,p.x,p.y))+" · "+esc(MAPBY[p.map].label):"",esc(i.category),esc(REPS[i.repeat]||"")];
   if(i.lastDone)bits.push("Last done "+esc(fmt(i.lastDone)));
-  if(i.notify==="yes")bits.push(`<span class="bell">${bellSvg}Reminder</span>`);
+  if(i.notify==="yes")bits.push(remSummary(i));
   const d=openSheet(`<div class="sh-head"><span class="dotc st-${l.c}">${iconSvg(iconOf(i))}</span><div style="min-width:0"><h3>${esc(i.title)}</h3><div style="margin-top:6px"><span class="pill ${l.c}">${esc(l.label)}</span></div><div class="sh-meta">${bits.filter(Boolean).map(b=>"<span>"+b+"</span>").join("")}</div></div></div>
     ${i.note?`<p class="sh-note">${esc(i.note)}</p>`:""}
     <div class="sh-acts">${hold?'<button class="btn" data-s="resume" type="button">Resume</button>':'<button class="btn good" data-s="done" type="button">Mark done</button>'}<button class="btn ghost" data-s="edit" type="button">Edit job</button>${hold?"":'<button class="btn ghost" data-s="hold" type="button">Hold</button>'}</div>
@@ -1174,6 +1372,7 @@ function newJobSheet(q){
       <div class="two"><label class="f">Area<select name="category">${optHTML(CATS.map(c=>[c,c]),area)}</select></label>
       <label class="f">Repeats<select name="repeat">${optHTML(Object.entries(REPS),"once")}</select></label></div>
       <label class="f">Due<input type="date" name="dueDate"></label>
+      ${remPicker({by:[],days:[],to:[]})}
       <div class="f" style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">Icon</div>
       <div class="icons" id="njIcons">${Object.keys(ICON_PATHS).map(k=>`<button class="ic" type="button" data-nic="${k}" aria-pressed="${k==="wrench"}" title="${esc(ICON_NAMES[k])}" aria-label="${esc(ICON_NAMES[k])}">${iconSvg(k)}</button>`).join("")}</div>
       <div class="sh-acts"><button class="btn" type="submit">Add job here</button><button class="btn ghost" type="button" data-x="cancel">Cancel</button></div>
@@ -1191,12 +1390,200 @@ function newJobSheet(q){
   f.addEventListener("submit",async e=>{e.preventDefault();
     const title=f.title.value.trim();if(!title){f.title.focus();return}
     if(!(await confirmSensitive(title)))return;
-    const it={id:"",title,category:f.category.value,repeat:f.repeat.value,dueDate:f.dueDate.value||"",season:"",note:"",status:"active",history:[],lastDone:"",completedAt:"",notify:"",remindDays:"",map:curMap,x:q.x.toFixed(4),y:q.y.toFixed(4),icon};
+    const it=Object.assign({id:"",title,category:f.category.value,repeat:f.repeat.value,dueDate:f.dueDate.value||"",season:"",note:"",status:"active",history:[],lastDone:"",completedAt:"",map:curMap,x:q.x.toFixed(4),y:q.y.toFixed(4),icon},remRead(f));
     closeSheet(); if(await run("saveItem",{item:it}))toast(`Added "${title}"`);
   });
   setTimeout(()=>f.title.focus(),60);
 }
 function view_(v){view=v}
+
+/* ---------- guide ---------- */
+$("#helpBtn").addEventListener("click",()=>{if($("#guide").hidden){renderGuide();show("guide");window.scrollTo(0,0)}else{show("app");render()}});
+function renderGuide(){
+  const tickOn='<span class="tick on" style="width:26px;height:26px">'+check+'</span>',tickOff='<span class="tick" style="width:26px;height:26px"></span>';
+  const pill=(c,t)=>`<span class="pill ${c}">${t}</span>`;
+  const dot=c=>`<span class="dotc st-${c}">${iconSvg("wrench")}</span>`;
+  const row=(k,t)=>`<div class="k">${k}</div><div>${t}</div>`;
+  const card=(id,title,body)=>`<div class="card" id="${id}"><h2>${title}</h2>${body}</div>`;
+  $("#guide").innerHTML=`
+  <div class="card"><h2>How to use Keeper</h2><p>Everything you both need to keep on top of the house: jobs, appointments, bills and where things are. Anything one of you changes shows up on the other's phone within a minute.</p>
+    <div class="gjump"><a href="#g-jobs">Jobs</a><a href="#g-cal">Calendar</a><a href="#g-map">Map</a><a href="#g-mapicons">Map icons</a><a href="#g-bills">Bills</a><a href="#g-rem">Reminders</a><a href="#g-key">Symbols & colours</a></div></div>
+
+  ${card("g-jobs","Jobs",`<ol class="gsteps">
+    <li><b>Add a job</b> in the box at the top. Choose the area, how often it repeats and when it's due. Tick <b>Show on calendar</b> if you want it there too.</li>
+    <li><b>Tick the circle</b> when it's done. Repeating jobs move on to their next date by themselves. One-off jobs go to <b>Done &amp; history</b>.</li>
+    <li><b>Tap a job</b> to open it: change details, add notes, set reminders, put it on the map or calendar, or tap <b>Remind now</b> to email straight away.</li>
+    <li><b>Hold</b> parks a job (no reminders) until you tap <b>Resume</b>. Done one-offs can be <b>Reopened</b>.</li>
+    <li>Made a mistake? Tap <b>Undo</b> on the message at the bottom of the screen.</li></ol>
+    <p><b>Done &amp; history</b> keeps a dated log of everything ticked off and who did it. Nothing is ever lost when you complete a job.</p>
+    <p>The four boxes at the top count jobs overdue by more than a month, overdue, due in the next 2 weeks, and done in the last 2 weeks.</p>`)}
+
+  ${card("g-cal","Calendar",`<ol class="gsteps">
+    <li>Tap a day to see what's on it. Use <b>&lsaquo; &rsaquo;</b> to change month and <b>Today</b> to jump back.</li>
+    <li><b>Add appointment</b> for the selected day: name, optional times, notes, and repeats (every week, 2 weeks, 4 weeks, month or year: good for bins and birthdays).</li>
+    <li><b>Bring a job across</b> puts an existing job on the calendar. If it already has a date you can move it to that day or keep its own date.</li>
+    <li>Tap an appointment to edit or delete it. Tap a job to open it on the Jobs tab (untick <b>Show on the calendar</b> there to take it off).</li></ol>
+    <p>Repeating jobs, like a window cleaner every 4 weeks, show their next visits faded with a <b>Repeat</b> label. Once ticked off, they show in green on the day they were done.</p>
+    <p>Below the selected day is <b>Next 30 days</b>, so you can see what's coming without scrolling through months.</p>`)}
+
+  ${card("g-map","Map",`<ol class="gsteps">
+    <li>Pick a plan along the top: outside, ground floor, annex &amp; garage, first floor. A red number on a tab means overdue jobs on that plan.</li>
+    <li>Pinch or use <b>+ / &minus;</b> to zoom, drag to move around, and the corners button to fit the whole plan.</li>
+    <li><b>Tap a pin</b> to see the job: mark it done, edit it, hold it, move the pin, change its icon or take it off the map.</li>
+    <li><b>Add a job on the map</b>, then tap where it is. You can add a new job there or place one that's not on a map yet.</li>
+    <li><b>Move pins</b>, then drag any pin to where it should be. Tap the button again to finish.</li></ol>
+    <p><b>Not on a map yet</b> at the bottom lists jobs without a pin. On the outside plan, the manhole key explains each manhole number.</p>`)}
+
+  ${card("g-mapicons","Map icons",`<p>Each pin shows a picture of what the job is about. The app picks one from the job's name; you can change it with <b>Change icon</b>.</p>
+    <div class="gsub">Pin colour means when it's due</div>
+    <div class="gkey">${row(dot("red"),"<b>Red</b>: overdue (it pulses so you notice)")}${row(dot("amber"),"<b>Amber</b>: due soon (within 7, 14 or 30 days, you choose under the map)")}${row(dot("green"),"<b>Green</b>: due later")}${row(dot("grey"),"<b>Grey</b>: on hold or no date set")}</div>
+    <div class="gsub">What the pictures mean</div>
+    <div class="gicons">${Object.keys(ICON_PATHS).map(k=>`<div><span class="dotc st-grey">${iconSvg(k)}</span>${esc(ICON_NAMES[k]||k)}</div>`).join("")}</div>`)}
+
+  ${card("g-bills","Bills",`<ol class="gsteps">
+    <li>Add a bill with its amount, how often it's paid and when it's next due.</li>
+    <li>Tap <b>Paid</b> when it goes out. It logs the payment and moves to the next due date.</li>
+    <li>Tap a bill to add who it's with, which account it comes from, notes, and reminders. If the amount changes, the old and new prices are kept in its history.</li>
+    <li><b>End this bill</b> when you cancel something. It moves to <b>Ended</b>, with its history kept.</li></ol>
+    <p>The boxes at the top show roughly what your bills cost a month, what's due in 2 weeks, what's not been marked paid, and what's been paid this month.</p>
+    <div class="guide-tip">Never put account numbers, sort codes, card numbers or passwords in the app. If something looks like personal details, the app asks before saving.</div>`)}
+
+  ${card("g-rem","Reminders & contacts",`<ol class="gsteps">
+    <li>First, tap the cog › <b>Contacts</b> and add yourselves (<b>Add me</b> fills in your details). Use <b>Test email</b> to check it arrives.</li>
+    <li>On any job or appointment, set <b>Email reminders</b> to <b>On</b>, then pick <b>when</b> (as many as you like: 1 month, 2 weeks, 1 week, 3 days, 1 day, on the day) and <b>who</b>.</li>
+    <li>Reminder emails go out at 8am. If nobody is picked, everyone with reminder emails switched on gets it.</li></ol>
+    <p>Overdue jobs with reminders on get a nudge the day after, then every Monday until they're done. On the 1st of each month you both get a round-up: what's overdue, what's due, the month's appointments and bills.</p>
+    <p>Turn all emails on or off for yourself under the cog › <b>You</b>.</p>`)}
+
+  ${card("g-key","Symbols & colours",`<div class="gkey">
+    ${row(tickOff,"Tap to mark a job done")}
+    ${row(tickOn,"Done")}
+    ${row(`<span class="bell">${bellSvg}</span>`,"Email reminders are on (shows who gets them)")}
+    ${row(`<span class="calicon">${calSvg}</span>`,"Shown on the calendar (and its time, if set)")}
+    ${row(`<span class="roomtag">${pinMark}</span>`,"Pinned on the map (shows the room)")}
+    ${row(pill("over","Overdue 40 days"),"Overdue by more than a month")}
+    ${row(pill("late","Overdue 3 days"),"Overdue")}
+    ${row(pill("soon","Due in 5 days"),"Due within 2 weeks")}
+    ${row(pill("later","Due Fri 20 Nov"),"Due later, or no date")}
+    ${row(pill("hold","On hold"),"Parked: no reminders")}
+    ${row(pill("done","Done"),"Finished")}
+    ${row('<span style="display:flex;gap:5px"><i class="ce" style="width:9px;height:9px;border-radius:50%;display:inline-block"></i><i class="cj" style="width:9px;height:9px;border-radius:50%;display:inline-block"></i><i class="co" style="width:9px;height:9px;border-radius:50%;display:inline-block"></i><i class="cd" style="width:9px;height:9px;border-radius:50%;display:inline-block"></i></span>',"Calendar dots: blue appointment, amber job, red overdue job, green job done")}
+    ${row('<span class="cog" style="background:var(--band);width:34px;height:34px">'+$("#cogBtn").innerHTML+'</span>',"Settings: you, contacts and (for the owner) who can use the app")}
+    </div>`)}
+
+  <button class="btn ghost" type="button" id="guideClose">Back to the app</button>`;
+  $("#guideClose").addEventListener("click",()=>{show("app");render();window.scrollTo(0,0)});
+  $("#guide").querySelectorAll(".gjump a").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();const t=$(a.getAttribute("href"));if(t)t.scrollIntoView({behavior:"smooth",block:"start"})}));
+}
+
+/* ---------- calendar ---------- */
+const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+function tRange(a,b){return a?(a+(b?"–"+b:"")):""}
+/** Everything on the calendar between two dates (inclusive). */
+function calItems(from,to){
+  const out=[],t=today();
+  events.forEach(e=>{let d=e.date,n=0;if(!d)return;
+    while(d<=to&&n<1500){if(d>=from)out.push({date:d,kind:"ev",time:e.time,end:e.endTime,title:e.title,e});
+      if(!e.repeat||e.repeat==="once")break;d=addInterval(d,e.repeat);n++}});
+  items.forEach(i=>{if(i.cal!=="yes")return;
+    (i.history||[]).forEach(h=>{if(h.date>=from&&h.date<=to)out.push({date:h.date,kind:"dn",title:i.title,i,by:h.by})});
+    if(i.status==="done"||!i.dueDate)return;
+    let d=i.dueDate,n=0,proj=false;
+    while(d<=to&&n<1500){if(d>=from)out.push({date:d,kind:!proj&&d<t?"ov":"jb",time:i.calTime,title:i.title,i,proj});
+      if(i.repeat==="once"||i.status!=="active")break;d=addInterval(d,i.repeat==="seasonal"?"annual":i.repeat);proj=true;n++}});
+  const rank={dn:0,ov:1,ev:2,jb:3};
+  return out.sort((a,b)=>a.date.localeCompare(b.date)||(a.time||"").localeCompare(b.time||"")||rank[a.kind]-rank[b.kind]);
+}
+function renderCal(){
+  const t=today();if(!calSel)calSel=t;if(!calMonth)calMonth=calSel.slice(0,7);
+  const y=+calMonth.slice(0,4),m=+calMonth.slice(5,7)-1;
+  $("#calTitle").textContent=MONTHS[m]+" "+y;
+  const first=new Date(y,m,1),startOff=(first.getDay()+6)%7,start=new Date(y,m,1-startOff);
+  const last=new Date(y,m+1,0),cells=Math.ceil((startOff+last.getDate())/7)*7;
+  const from=iso(start),end=new Date(start);end.setDate(end.getDate()+cells-1);const to=iso(end);
+  const all=calItems(from,to),by={};all.forEach(x=>(by[x.date]=by[x.date]||[]).push(x));
+  let g=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(d=>`<div class="dow">${d}</div>`).join("");
+  for(let k=0;k<cells;k++){const d=new Date(start);d.setDate(d.getDate()+k);const ds=iso(d),l=by[ds]||[];
+    const dots=l.slice(0,4).map(x=>`<i class="${x.kind==="ev"?"ce":x.kind==="dn"?"cd":x.kind==="ov"?"co":"cj"}"></i>`).join("");
+    g+=`<button type="button" class="cday${d.getMonth()!==m?" out":""}${ds===t?" today":""}" data-d="${ds}" aria-selected="${ds===calSel}" aria-label="${esc(fmt(ds))}${l.length?", "+l.length+" item"+(l.length>1?"s":""):""}"><span class="n">${d.getDate()}</span><span class="dots">${dots}</span>${l.length>4?`<span class="more">+${l.length-4}</span>`:""}</button>`}
+  $("#calGrid").innerHTML=g;
+  const day=calItems(calSel,calSel);
+  const dl=parse(calSel).toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"});
+  $("#calDay").innerHTML=`<section class="group"><h2>${esc(dl)}${calSel===t?" · today":""}</h2><div class="list">${day.length?day.map(calRow).join(""):'<div class="empty">Nothing on. Use the buttons above to add something to this day.</div>'}</div></section>`;
+  const nx=new Date(parse(t));nx.setDate(nx.getDate()+30);
+  const soon=calItems(t,iso(nx)).filter(x=>x.kind!=="dn"&&x.date!==calSel);
+  $("#calSoon").innerHTML=soon.length?`<section class="group"><h2>Next 30 days · ${soon.length}</h2><div class="list">${soon.map(x=>calRow(x,true)).join("")}</div></section>`:"";
+}
+function calRow(x,withDate){
+  const short=parse(x.date).toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});
+  const tm=(withDate?esc(short)+"<br>":"")+(x.time?esc(tRange(x.time,x.end)):withDate?"":"All day");
+  const bits=[];
+  if(x.kind==="ev"){bits.push("Appointment");if(x.e.repeat&&x.e.repeat!=="once")bits.push(esc(EREPS[x.e.repeat]));if(x.e.notify==="yes")bits.push(remSummary(x.e));
+    return `<button type="button" class="crow ev" data-ev="${esc(x.e.id)}" data-d="${x.date}"><span class="tm">${tm}</span><span><span class="title">${esc(x.title)}</span><span class="meta">${bits.map(b=>"<span>"+b+"</span>").join("")}</span></span><span class="pill soon">Edit</span></button>`}
+  if(x.kind==="dn")return `<button type="button" class="crow dn" data-job="${esc(x.i.id)}"><span class="tm">${tm}</span><span><span class="title">${esc(x.title)}</span><span class="meta"><span>Job done${x.by?" by "+esc(x.by):""}</span></span></span><span class="pill done">Done</span></button>`;
+  bits.push("Job · "+esc(REPS[x.i.repeat]||""));if(x.proj)bits.push("Next one if kept on schedule");if(x.i.notify==="yes")bits.push(remSummary(x.i));
+  const pill=x.kind==="ov"?'<span class="pill over">Overdue</span>':x.proj?'<span class="pill later">Repeat</span>':'<span class="pill amber">Job</span>';
+  return `<button type="button" class="crow ${x.kind==="ov"?"ov":"jb"}${x.proj?" proj":""}" data-job="${esc(x.i.id)}"><span class="tm">${tm}</span><span><span class="title">${esc(x.title)}</span><span class="meta">${bits.map(b=>"<span>"+b+"</span>").join("")}</span></span>${pill}</button>`;
+}
+function shiftMonth(n){const y=+calMonth.slice(0,4),m=+calMonth.slice(5,7)-1+n,d=new Date(y,m,1);calMonth=iso(d).slice(0,7);renderCal()}
+$("#calPrev").addEventListener("click",()=>shiftMonth(-1));
+$("#calNext").addEventListener("click",()=>shiftMonth(1));
+$("#calToday").addEventListener("click",()=>{calSel=today();calMonth=calSel.slice(0,7);renderCal()});
+$("#calGrid").addEventListener("click",e=>{const b=e.target.closest("[data-d]");if(!b)return;calSel=b.dataset.d;if(calSel.slice(0,7)!==calMonth)calMonth=calSel.slice(0,7);renderCal()});
+$("#calAdd").addEventListener("click",()=>eventSheet(null,calSel||today()));
+$("#calBring").addEventListener("click",()=>bringSheet(calSel||today()));
+document.querySelector("#v-cal").addEventListener("click",e=>{
+  const ev=e.target.closest("[data-ev]");if(ev){const x=events.find(z=>z.id===ev.dataset.ev);if(x)eventSheet(x,ev.dataset.d);return}
+  const jb=e.target.closest("[data-job]");if(jb){const i=items.find(z=>z.id===jb.dataset.job);if(!i)return;
+    view_("jobs");tab=i.status==="onhold"?"hold":i.status==="done"?"done":"todo";cat="All";openId=i.status==="done"?null:i.id;render();
+    setTimeout(()=>{const el=document.querySelector(`.item[data-id="${CSS.escape(i.id)}"]`);if(el)el.scrollIntoView({behavior:"smooth",block:"start"})},50)}
+});
+function eventSheet(ev,onDate){
+  const isNew=!ev;ev=ev||{id:"",title:"",date:onDate,time:"",endTime:"",repeat:"once",note:"",notify:"",remindDays:"",remindTo:""};
+  const st=isNew?{by:[],days:[],to:[]}:remState(ev);
+  const d=openSheet(`<div class="sh-head"><span class="dotc st-grey">${calSvg}</span><div><h3>${isNew?"New appointment":"Edit appointment"}</h3>${!isNew&&ev.repeat!=="once"?`<div class="sh-meta"><span>${esc(EREPS[ev.repeat])} · changes apply to every one</span></div>`:""}</div></div>
+    <form id="evf" autocomplete="off">
+      <label class="f">What<input name="title" maxlength="200" value="${esc(ev.title)}" placeholder="e.g. Dentist, parents' evening" required></label>
+      <label class="f">Date<input type="date" name="date" value="${esc(ev.date)}" required></label>
+      <div class="two"><label class="f">Starts (optional)<input type="time" name="time" value="${esc(ev.time)}"></label><label class="f">Ends (optional)<input type="time" name="endTime" value="${esc(ev.endTime)}"></label></div>
+      <label class="f">Repeats<select name="repeat">${optHTML(Object.entries(EREPS),ev.repeat||"once")}</select></label>
+      <label class="f">Notes<textarea name="note" maxlength="2000" placeholder="Address, what to bring…">${esc(ev.note||"")}</textarea></label>
+      ${remPicker(st,"1")}
+      <div class="sh-acts"><button class="btn" type="submit">${isNew?"Add to calendar":"Save"}</button><button class="btn ghost" type="button" data-x="cancel">Cancel</button>${isNew?"":'<button class="btn ghost" type="button" data-x="del">Delete</button>'}</div>
+    </form>`);
+  const f=d.querySelector("#evf");remSync(f.querySelector("[data-rem]"));
+  d.addEventListener("click",async e=>{const x=e.target.closest("[data-x]");if(!x)return;
+    if(x.dataset.x==="cancel"){closeSheet();return}
+    if(x.dataset.x==="del"){if(!confirm("Delete "+ev.title+(ev.repeat!=="once"?" (every one)":"")+"?"))return;const prev=clone(ev);closeSheet();
+      if(await run("deleteEvent",{id:ev.id}))toast(`"${ev.title}" deleted`,{kind:"event",prev})}});
+  f.addEventListener("submit",async e=>{e.preventDefault();
+    const title=f.title.value.trim();if(!title){f.title.focus();return}if(!f.date.value){f.date.focus();return}
+    if(!(await confirmSensitive(title+"\n"+f.note.value)))return;
+    const r=remRead(f),next=Object.assign(clone(ev),{title,date:f.date.value,time:f.time.value||"",endTime:f.time.value?(f.endTime.value||""):"",repeat:f.repeat.value,note:f.note.value,notify:r.notify,remindDays:r.remindDays,remindTo:r.remindTo});
+    closeSheet();if(await run("saveEvent",{event:next})){calSel=next.date;calMonth=next.date.slice(0,7);renderCal();toast(isNew?`Added "${title}"`+(r.notify?" with reminders":""):"Saved")}});
+  if(isNew)setTimeout(()=>f.title.focus(),60);
+}
+function bringSheet(day){
+  const pool=items.filter(i=>i.status!=="done"&&i.cal!=="yes").sort((a,b)=>(a.dueDate||"9").localeCompare(b.dueDate||"9")||a.title.localeCompare(b.title));
+  const dayTxt=fmt(day);
+  const d=openSheet(`<div class="sh-head"><span class="dotc st-amber">${calSvg}</span><div><h3>Bring a job across</h3><div class="sh-meta"><span>Pick a job to show on the calendar</span></div></div></div>
+    ${pool.length?`<div class="bringlist">${pool.map(i=>`<button type="button" data-b="${esc(i.id)}"><span>${esc(i.title)}</span><small>${i.dueDate?"due "+esc(fmt(i.dueDate)):"no date"}</small></button>`).join("")}</div>`:'<p class="note" style="margin-top:12px">Every job is already on the calendar. Add new jobs on the Jobs tab and tick "Show on calendar".</p>'}
+    <div id="bringPick" hidden></div>
+    <div class="sh-acts"><button class="btn ghost" type="button" data-x="cancel">Cancel</button></div>`);
+  d.addEventListener("click",async e=>{
+    const x=e.target.closest("[data-x]");if(x&&x.dataset.x==="cancel"){closeSheet();return}
+    const b=e.target.closest("[data-b]");
+    if(b){const i=items.find(z=>z.id===b.dataset.b);if(!i)return;d.querySelector(".bringlist").hidden=true;const p=d.querySelector("#bringPick");p.hidden=false;
+      p.innerHTML=`<form id="bf" style="margin-top:12px"><div class="title">${esc(i.title)}</div>
+        ${i.dueDate&&i.dueDate!==day?`<label class="calchk"><input type="radio" name="when" value="move" checked> Move it to ${esc(dayTxt)}</label><label class="calchk"><input type="radio" name="when" value="keep"> Keep its date (${esc(fmt(i.dueDate))})</label>`:`<p class="note">It goes on ${esc(dayTxt)}${i.dueDate?"":" (that becomes its due date)"}.</p>`}
+        <label class="f">Time (optional)<input type="time" name="calTime" value="${esc(i.calTime||"")}"></label>
+        <button class="btn" type="submit">Put on calendar</button></form>`;
+      p.querySelector("#bf").addEventListener("submit",async ev=>{ev.preventDefault();const f=ev.target,keep=f.when&&f.when.value==="keep";
+        const next=clone(i);next.cal="yes";next.calTime=f.calTime.value||"";if(!keep)next.dueDate=day;
+        closeSheet();if(await run("saveItem",{item:next})){calSel=next.dueDate;calMonth=calSel.slice(0,7);renderCal();toast(`"${i.title}" is on the calendar`,{kind:"job",prev:i})}});
+      return}
+  });
+}
 
 /* ---------- go ---------- */
 (function(){
