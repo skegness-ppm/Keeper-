@@ -224,6 +224,21 @@ button{cursor:pointer}
 .seg.three{grid-template-columns:1fr 1fr 1fr}
 .seg.four{grid-template-columns:repeat(4,1fr)}
 .seg.four button{padding:9px 4px;font-size:15px}
+.seg.five{grid-template-columns:repeat(5,1fr)}
+.seg.five button{padding:9px 2px;font-size:13.5px}
+.thsearch{width:100%;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:11px 14px;font-size:16px}
+.thalert{background:var(--soon-soft);color:var(--soon);border-radius:12px;padding:10px 14px;display:flex;flex-direction:column;gap:4px;font-size:14px}
+.tcard{display:flex;flex-direction:column;gap:12px;padding:4px 14px 14px}
+.qh{background:var(--info-soft);border-radius:10px;padding:10px 12px;white-space:pre-wrap;font-size:14.5px;line-height:1.45}
+.qh h3,.tsec h3{margin:0 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);white-space:normal}
+details.tguide{border:1px solid var(--line);border-radius:10px;padding:2px 12px}
+details.tguide summary{cursor:pointer;font-weight:600;padding:9px 0}
+.gtext{white-space:pre-wrap;font-size:14.5px;line-height:1.5;padding-bottom:6px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:14px;margin:0}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0}
+.tlinks{display:flex;gap:8px;flex-wrap:wrap}
+.tlinks a{text-decoration:none}
 .calbox{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px}
 .calhead{display:flex;align-items:center;gap:6px;margin-bottom:8px}
 .calhead h2{flex:1;margin:0;text-align:center;font-family:var(--display);font-size:20px}
@@ -427,11 +442,12 @@ details.unplaced summary{cursor:pointer;font-size:12px;text-transform:uppercase;
 
   <!-- ============ APP ============ -->
   <main id="app" hidden style="display:flex;flex-direction:column;gap:18px">
-    <div class="seg four" role="tablist" aria-label="Section">
+    <div class="seg five" role="tablist" aria-label="Section">
       <button role="tab" data-view="jobs" aria-selected="true">Jobs</button>
       <button role="tab" data-view="cal" aria-selected="false">Calendar</button>
       <button role="tab" data-view="map" aria-selected="false">Map</button>
       <button role="tab" data-view="bills" aria-selected="false">Bills</button>
+      <button role="tab" data-view="things" aria-selected="false">Things</button>
     </div>
 
     <!-- JOBS -->
@@ -486,6 +502,22 @@ details.unplaced summary{cursor:pointer;font-size:12px;text-transform:uppercase;
       <div class="filters" id="billFilters"></div>
       <div id="billList"></div>
       <p class="note">Never put account numbers, sort codes, card numbers or passwords in here. Names, amounts and dates are all it needs.</p>
+    </div>
+
+    <!-- THINGS -->
+    <div id="v-things" hidden style="display:flex;flex-direction:column;gap:14px">
+      <form class="add" id="thForm" autocomplete="off">
+        <div class="add-row">
+          <input id="thName" placeholder="Add something you own… e.g. Washing machine" aria-label="New thing" maxlength="120">
+          <button class="btn" id="thBtn" type="submit">Add</button>
+        </div>
+        <div class="opts"><label>Type <select id="thCat"></select></label></div>
+      </form>
+      <input id="thSearch" class="thsearch" type="search" placeholder="Search everything you own" aria-label="Search things">
+      <div id="thAlerts"></div>
+      <div class="filters" id="thFilters"></div>
+      <div id="thList"></div>
+      <p class="note">Tip: send Claude photos of a manual and say "add to Keeper". It writes the quick help and guide straight into your list.</p>
     </div>
 
     <!-- CALENDAR -->
@@ -562,7 +594,7 @@ const bellSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
 const check='<svg viewBox="0 0 16 16" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3L13 4.5"/></svg>';
 
 /* ---------- state ---------- */
-let KEY=null, me=null, items=[], bills=[], people=null, contacts=[], events=[], calMonth=null, calSel=null, view="jobs", tab="todo", cat="All", bfilter="Active";
+let KEY=null, me=null, items=[], bills=[], people=null, contacts=[], events=[], calMonth=null, calSel=null, view="jobs", tab="todo", cat="All", bfilter="Active", things=[], openThing=null, editThing=null, tcat="All", tq="";
 let openId=null, openBill=null, undoState=null, toastTimer=null, busy=false, pollTimer=null;
 
 /* ---------- helpers ---------- */
@@ -667,12 +699,14 @@ function setData(j){
   oldBackend=items.length>0&&!items.some(i=>Object.prototype.hasOwnProperty.call(i,"map"));
   if(openId&&!items.some(i=>i.id===openId))openId=null;
   if(openBill&&!bills.some(b=>b.id===openBill))openBill=null;
+  if(j.things)things=j.things;
+  if(openThing&&!things.some(t=>t.id===openThing))openThing=editThing=null;
   render();
 }
 async function run(action,extra){busy=true;try{const j=await api(action,extra);setData(j);return true}catch(e){showErr(e);return false}finally{busy=false}}
 async function refresh(){
   if(busy||$("#app").hidden)return;
-  const ae=document.activeElement;if(openId||openBill||$("#sheet")||mapMode||gest||(ae&&ae.closest&&(ae.closest(".edit")||ae.closest("#settings"))))return;
+  const ae=document.activeElement;if(openId||openBill||editThing||$("#sheet")||mapMode||gest||(ae&&ae.closest&&(ae.closest(".edit")||ae.closest("#settings"))))return;
   try{setData(await api("all"))}catch(e){showErr(e)}
 }
 
@@ -763,7 +797,7 @@ $("#meForm").addEventListener("submit",async e=>{
 $("#testMail").addEventListener("click",async()=>{try{await api("testEmail");toast("Test email sent")}catch(e){showErr(e)}});
 
 /* ---------- main switch ---------- */
-document.querySelector(".seg").addEventListener("click",e=>{const b=e.target.closest("[data-view]");if(!b)return;view=b.dataset.view;openId=openBill=null;mapMode=null;moveOn=false;selPin=null;render()});
+document.querySelector(".seg").addEventListener("click",e=>{const b=e.target.closest("[data-view]");if(!b)return;view=b.dataset.view;openId=openBill=openThing=editThing=null;mapMode=null;moveOn=false;selPin=null;render()});
 
 /* ---------- reminder picker (who, how, when) ---------- */
 function myContact(){if(!me)return null;const e=(me.email||"").toLowerCase();return contacts.find(c=>e&&(c.email||"").toLowerCase()===e)||contacts.find(c=>(c.name||"").toLowerCase()===(me.name||"").toLowerCase())||null}
@@ -867,10 +901,10 @@ opts($("#billFreq"),Object.entries(BFREQ),"monthly");
 
 function render(){
   document.querySelectorAll(".seg [data-view]").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.view===view)));
-  $("#v-jobs").hidden=view!=="jobs";$("#v-bills").hidden=view!=="bills";$("#v-map").hidden=view!=="map";$("#v-cal").hidden=view!=="cal";
+  $("#v-jobs").hidden=view!=="jobs";$("#v-bills").hidden=view!=="bills";$("#v-map").hidden=view!=="map";$("#v-cal").hidden=view!=="cal";$("#v-things").hidden=view!=="things";
   const waiting=(people||[]).filter(p=>p.status==="pending").length;
   $("#cogCount").hidden=!waiting;$("#cogCount").textContent=waiting;
-  if(view==="jobs"){renderJobs();renderAddRem()}else if(view==="map")renderMap();else if(view==="cal")renderCal();else renderBills();
+  if(view==="jobs"){renderJobs();renderAddRem()}else if(view==="map")renderMap();else if(view==="cal")renderCal();else if(view==="things")renderThings();else renderBills();
   if(!$("#settings").hidden)renderSettings();
 }
 
@@ -1004,6 +1038,7 @@ function toast(msg,undo){undoState=undo||null;$("#toastMsg").textContent=msg;$("
   clearTimeout(toastTimer);toastTimer=setTimeout(()=>{$("#toast").hidden=true;undoState=null},6000)}
 $("#toastUndo").addEventListener("click",async()=>{if(!undoState)return;const u=undoState;undoState=null;$("#toast").hidden=true;
   if(u.kind==="event"){await run("saveEvent",{event:u.prev});return}
+  if(u.kind==="thing"){await run("saveThing",{thing:u.prev});return}
   await run(u.kind==="bill"?"saveBill":"saveItem",u.kind==="bill"?{bill:u.prev}:{item:u.prev})});
 
 async function markDone(i){
@@ -1104,6 +1139,126 @@ $("#billList").addEventListener("submit",async e=>{
   if(amt.toFixed(2)!==Number(b.amount).toFixed(2))next.priceHistory=(b.priceHistory||[]).concat([{date:today(),from:Number(b.amount).toFixed(2),to:amt.toFixed(2)}]);
   Object.assign(next,{name,provider,amount:amt.toFixed(2),frequency:fd.get("frequency"),nextDue:fd.get("nextDue")||"",account,category:fd.get("category"),note,notify:rem?"yes":"",remindDays:rem});
   openBill=null;if(await run("saveBill",{bill:next}))toast("Saved");
+});
+
+/* ================= THINGS WE OWN =================
+   One row per thing on the "Things" tab of the Sheet. Claude can add rows straight into the Sheet
+   (with a quick-help box and an easy guide), and they show up here with no code changes. */
+const THCATS=["Heating","Kitchen","Laundry","Bathroom","Tech","Garden","Garage & tools","Kids","Furniture","Car","Other"];
+const THFIELDS=["name","category","room","make","model","boughtFrom","boughtDate","price","returnBy","warrantyEnd","warrantyNotes","manualLink","receiptLink","specs","quickHelp","guide","note"];
+function thRooms(){const s=[];MAPDEFS.forEach(m=>m.rooms.forEach(r=>{if(s.indexOf(r[0])===-1)s.push(r[0])}));return s}
+function thLink(u){u=String(u||"").trim();return /^https?:\/\//i.test(u)?u:""}
+function thStatus(t){
+  const td=today();
+  if(t.returnBy&&daysBetween(td,t.returnBy)>=0){const n=daysBetween(td,t.returnBy);
+    return{cls:n<=7?"late":"soon",label:n===0?"Last day to return":"Return by "+fmt(t.returnBy),n:n}}
+  if(t.warrantyEnd){const n=daysBetween(td,t.warrantyEnd);
+    if(n<0)return{cls:"later",label:"Warranty ended",n:100000};
+    if(n<=60)return{cls:"late",label:"Warranty ends in "+n+" day"+(n===1?"":"s"),n:n};
+    return{cls:"done",label:"Under warranty",n:n}}
+  return null;
+}
+function renderThings(){
+  const q=tq.trim().toLowerCase();
+  const pool=things.filter(t=>!q||[t.name,t.make,t.model,t.room,t.category,t.boughtFrom,t.note].join(" ").toLowerCase().indexOf(q)!==-1);
+  const cats=["All"].concat(THCATS.filter(c=>pool.some(t=>(t.category||"Other")===c)));
+  if(cats.indexOf(tcat)===-1)tcat="All";
+  $("#thFilters").innerHTML=cats.length>2?cats.map(c=>`<button class="chip" type="button" data-tc="${esc(c)}" aria-pressed="${c===tcat}">${esc(c)}</button>`).join(""):"";
+  const list=pool.filter(t=>tcat==="All"||(t.category||"Other")===tcat).sort((a,b)=>String(a.name).localeCompare(String(b.name)));
+  const alerts=things.map(t=>({t,s:thStatus(t)})).filter(x=>x.s&&(x.s.cls==="late"));
+  $("#thAlerts").innerHTML=alerts.length?`<div class="thalert">${alerts.map(x=>`<div><b>${esc(x.t.name)}</b>: ${esc(x.s.label)}</div>`).join("")}</div>`:"";
+  const v=$("#thList");
+  if(!things.length){v.innerHTML='<div class="list"><div class="empty">Nothing here yet. Add something above, or send Claude photos of a manual and say <b>add to Keeper</b>.</div></div>';return}
+  if(!list.length){v.innerHTML='<div class="list"><div class="empty">Nothing matches that search.</div></div>';return}
+  v.innerHTML=`<div class="list">${list.map(thingRow).join("")}</div>`;
+}
+function thingRow(t){
+  const s=thStatus(t),bits=[];
+  if(t.room)bits.push(esc(t.room));
+  if(t.make)bits.push(esc(t.make));
+  if(t.quickHelp||t.guide)bits.push("Guide");
+  return `<div class="item" data-tid="${esc(t.id)}"><div class="row nobox">
+    <button class="body" data-tact="open" type="button" aria-expanded="${openThing===t.id}"><div class="title">${esc(t.name)}</div><div class="meta">${bits.map(x=>"<span>"+x+"</span>").join("")}</div></button>
+    <div class="side">${s?`<span class="pill ${s.cls}">${esc(s.label)}</span>`:""}</div></div>${openThing===t.id?(editThing===t.id?thingEdit(t):thingCard(t)):""}</div>`;
+}
+function thingCard(t){
+  const kv=[];
+  if(t.category)kv.push(["Type",t.category]);
+  if(t.room)kv.push(["Where",t.room]);
+  if(t.make||t.model)kv.push(["Make & model",[t.make,t.model].filter(Boolean).join(" ")]);
+  if(t.boughtFrom||t.boughtDate)kv.push(["Bought",[t.boughtFrom,t.boughtDate?fmt(t.boughtDate):""].filter(Boolean).join(", ")]);
+  if(t.price!==""&&t.price!=null&&isFinite(Number(t.price)))kv.push(["Price",money(t.price)]);
+  if(t.returnBy)kv.push(["Return by",fmt(t.returnBy)]);
+  if(t.warrantyEnd)kv.push(["Warranty until",fmt(t.warrantyEnd)]);
+  const ml=thLink(t.manualLink),rl=thLink(t.receiptLink);
+  return `<div class="tcard">
+    ${t.quickHelp?`<div class="qh"><h3>Quick help</h3>${esc(t.quickHelp)}</div>`:""}
+    ${t.guide?`<details class="tguide"><summary>Full guide</summary><div class="gtext">${esc(t.guide)}</div></details>`:""}
+    ${kv.length?`<dl class="kv">${kv.map(p=>`<dt>${esc(p[0])}</dt><dd>${esc(p[1])}</dd>`).join("")}</dl>`:""}
+    ${t.warrantyNotes?`<div class="tsec"><h3>Warranty</h3><div class="gtext">${esc(t.warrantyNotes)}</div></div>`:""}
+    ${t.specs?`<div class="tsec"><h3>Specs</h3><div class="gtext">${esc(t.specs)}</div></div>`:""}
+    ${t.note?`<div class="tsec"><h3>Notes</h3><div class="gtext">${esc(t.note)}</div></div>`:""}
+    ${ml||rl?`<div class="tlinks">${ml?`<a class="btn ghost" href="${esc(ml)}" target="_blank" rel="noopener">Open manual</a>`:""}${rl?`<a class="btn ghost" href="${esc(rl)}" target="_blank" rel="noopener">Open receipt</a>`:""}</div>`:""}
+    <div class="actions"><button class="btn" type="button" data-tact="edit">Edit</button><button class="btn ghost" type="button" data-tact="close">Close</button></div>
+  </div>`;
+}
+function thingEdit(t){
+  const id=esc(t.id),rooms=thRooms();
+  const inp=(n,l,extra)=>`<label>${l}<input name="${n}" value="${esc(t[n]||"")}" ${extra||""}></label>`;
+  const area=(n,l,ph)=>`<label class="full">${l}<textarea name="${n}" maxlength="20000" placeholder="${esc(ph||"")}">${esc(t[n]||"")}</textarea></label>`;
+  return `<form class="edit" data-tform="${id}">
+    <label class="full">Name<input name="name" value="${esc(t.name||"")}" maxlength="120"></label>
+    <label>Type<select name="category">${optHTML(THCATS.map(c=>[c,c]),t.category||"Other")}</select></label>
+    <label>Where it is<input name="room" value="${esc(t.room||"")}" list="thRoomList" maxlength="60"></label>
+    ${inp("make","Make",'maxlength="60"')}${inp("model","Model",'maxlength="120"')}
+    ${inp("boughtFrom","Bought from",'maxlength="60"')}
+    <label>Date bought<input type="date" name="boughtDate" value="${esc(t.boughtDate||"")}"></label>
+    ${inp("price","Price (£)",'inputmode="decimal"')}
+    <label>Return by<input type="date" name="returnBy" value="${esc(t.returnBy||"")}"></label>
+    <label>Warranty until<input type="date" name="warrantyEnd" value="${esc(t.warrantyEnd||"")}"></label>
+    ${inp("manualLink","Manual link",'placeholder="https://…"')}${inp("receiptLink","Receipt link",'placeholder="https://…"')}
+    ${area("quickHelp","Quick help","The few things you need in a hurry")}
+    ${area("guide","Full guide","Step-by-step how-to")}
+    ${area("warrantyNotes","Warranty notes","What it covers, what you need to claim")}
+    ${area("specs","Specs","")}
+    ${area("note","Notes","")}
+    <datalist id="thRoomList">${rooms.map(r=>`<option value="${esc(r)}">`).join("")}</datalist>
+    <div class="actions"><button class="btn" type="submit">Save changes</button><button class="btn ghost" type="button" data-tact="canceledit">Cancel</button><span class="spacer"></span>
+    <button class="btn ghost" type="button" data-tact="askdel">Delete</button><span data-confirm hidden><span class="note">Delete for good?</span> <button class="btn danger" type="button" data-tact="del">Yes, delete</button></span></div></form>`;
+}
+opts($("#thCat"),THCATS.map(c=>[c,c]),"Other");
+$("#thSearch").addEventListener("input",e=>{tq=e.target.value;openThing=editThing=null;renderThings()});
+$("#thFilters").addEventListener("click",e=>{const c=e.target.closest("[data-tc]");if(c){tcat=c.dataset.tc;openThing=editThing=null;renderThings()}});
+$("#thForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const name=$("#thName").value.trim();if(!name){$("#thName").focus();return}
+  if(!(await confirmSensitive(name)))return $("#thName").focus();
+  const t={id:"",category:$("#thCat").value};THFIELDS.forEach(f=>{if(!(f in t))t[f]=""});t.name=name;
+  $("#thBtn").disabled=true;
+  if(await run("saveThing",{thing:t})){$("#thName").value="";tq="";$("#thSearch").value="";const n=things.find(x=>x.name===name);if(n){openThing=editThing=n.id;render()}toast(`Added "${name}"`)}
+  $("#thBtn").disabled=false;
+});
+$("#thList").addEventListener("click",async e=>{
+  const btn=e.target.closest("[data-tact]");if(!btn)return;
+  const el=btn.closest(".item");if(!el)return;
+  const t=things.find(x=>x.id===el.dataset.tid);if(!t)return;
+  const a=btn.dataset.tact;
+  if(a==="open"){openThing=openThing===t.id?null:t.id;editThing=null;render();return}
+  if(a==="close"){openThing=editThing=null;render();return}
+  if(a==="edit"){editThing=t.id;render();return}
+  if(a==="canceledit"){editThing=null;render();return}
+  if(a==="askdel"){el.querySelector("[data-confirm]").hidden=false;btn.hidden=true;return}
+  if(a==="del"){const prev=clone(t);openThing=editThing=null;if(await run("deleteThing",{id:t.id}))toast(`"${t.name}" deleted`,{kind:"thing",prev})}
+});
+$("#thList").addEventListener("submit",async e=>{
+  e.preventDefault();const f=e.target,fd=new FormData(f);
+  const t=things.find(x=>x.id===f.dataset.tform);if(!t)return;
+  const next=clone(t);
+  THFIELDS.forEach(k=>{if(fd.has(k))next[k]=String(fd.get(k)||"").trim()});
+  if(!next.name){f.querySelector("[name=name]").focus();return}
+  if(next.price!==""){const p=parseFloat(next.price.replace(/[£,\s]/g,""));if(!isFinite(p)||p<0){f.querySelector("[name=price]").focus();return}next.price=p.toFixed(2)}
+  if(!(await confirmSensitive([next.name,next.boughtFrom,next.note].join("\n"))))return;
+  editThing=null;if(await run("saveThing",{thing:next}))toast("Saved");
 });
 
 
