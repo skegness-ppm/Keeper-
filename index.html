@@ -239,6 +239,24 @@ details.tguide summary{cursor:pointer;font-weight:600;padding:9px 0}
 .kv dd{margin:0}
 .tlinks{display:flex;gap:8px;flex-wrap:wrap}
 .tlinks a{text-decoration:none}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px}
+.pthumb{position:relative;aspect-ratio:3/4;max-width:100%;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface-2);padding:0;cursor:pointer}
+.pthumb img{width:100%;height:100%;object-fit:cover;display:block}
+.pthumb .pdf{display:grid;place-items:center;height:100%;font-weight:700;color:var(--muted)}
+.pthumb .plab{position:absolute;left:0;right:0;bottom:0;font-size:11px;font-weight:600;padding:3px 6px;background:var(--surface);color:var(--muted);text-align:left}
+.pthumb.broken{opacity:.5}
+.pthumb:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+#pview{position:fixed;inset:0;z-index:60;background:rgba(15,18,22,.82);display:flex;align-items:center;justify-content:center;padding:calc(12px + env(safe-area-inset-top,0px)) 12px calc(12px + env(safe-area-inset-bottom,0px))}
+#pview .pvbox{background:var(--surface);border-radius:14px;max-width:900px;width:100%;max-height:100%;display:flex;flex-direction:column;overflow:hidden}
+#pview .pvhead{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line)}
+#pview .pvhead div{flex:1;min-width:0}
+#pview .pvhead b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#pview .pvhead span{font-size:12px;color:var(--muted)}
+#pvBody{overflow:auto;flex:1;display:flex;align-items:flex-start;justify-content:center;padding:10px;min-height:120px}
+#pvBody img{max-width:100%;height:auto;display:block}
+#pvBody img.full{max-width:none;cursor:zoom-out}
+#pvBody img:not(.full){cursor:zoom-in}
+#pview .pvfoot{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 14px;border-top:1px solid var(--line)}
 .calbox{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px}
 .calhead{display:flex;align-items:center;gap:6px;margin-bottom:8px}
 .calhead h2{flex:1;margin:0;text-align:center;font-family:var(--display);font-size:20px}
@@ -517,7 +535,8 @@ details.unplaced summary{cursor:pointer;font-size:12px;text-transform:uppercase;
       <div id="thAlerts"></div>
       <div class="filters" id="thFilters"></div>
       <div id="thList"></div>
-      <p class="note">Tip: send Claude photos of a manual and say "add to Keeper". It writes the quick help and guide straight into your list.</p>
+      <p class="note">Tip: add photos of the manual to an item, then ask Claude to "do the guides". It writes the quick help and guide straight into your list.</p>
+      <input type="file" id="thFile" accept="image/*,application/pdf" multiple hidden>
     </div>
 
     <!-- CALENDAR -->
@@ -574,6 +593,14 @@ details.unplaced summary{cursor:pointer;font-size:12px;text-transform:uppercase;
       <button class="btn ghost" id="warnEdit" type="button">Go back and edit</button>
       <button class="btn danger" id="warnSave" type="button">Save anyway</button>
     </div>
+  </div>
+</div>
+
+<div id="pview" hidden role="dialog" aria-modal="true" aria-labelledby="pvTitle">
+  <div class="pvbox">
+    <div class="pvhead"><div><b id="pvTitle"></b><span id="pvMeta"></span></div><button class="btn ghost" id="pvClose" type="button">Close</button></div>
+    <div id="pvBody"></div>
+    <div class="pvfoot"><button class="btn ghost" id="pvDel" type="button">Delete photo</button><span id="pvConfirm" hidden><span class="note">Delete this photo?</span> <button class="btn danger" id="pvYes" type="button">Yes, delete</button> <button class="btn ghost" id="pvNo" type="button">Keep it</button></span></div>
   </div>
 </div>
 
@@ -706,7 +733,7 @@ function setData(j){
 async function run(action,extra){busy=true;try{const j=await api(action,extra);setData(j);return true}catch(e){showErr(e);return false}finally{busy=false}}
 async function refresh(){
   if(busy||$("#app").hidden)return;
-  const ae=document.activeElement;if(openId||openBill||editThing||$("#sheet")||mapMode||gest||(ae&&ae.closest&&(ae.closest(".edit")||ae.closest("#settings"))))return;
+  const ae=document.activeElement;if(openId||openBill||editThing||!$("#pview").hidden||$("#sheet")||mapMode||gest||(ae&&ae.closest&&(ae.closest(".edit")||ae.closest("#settings"))))return;
   try{setData(await api("all"))}catch(e){showErr(e)}
 }
 
@@ -1171,6 +1198,7 @@ function renderThings(){
   if(!things.length){v.innerHTML='<div class="list"><div class="empty">Nothing here yet. Add something above, or send Claude photos of a manual and say <b>add to Keeper</b>.</div></div>';return}
   if(!list.length){v.innerHTML='<div class="list"><div class="empty">Nothing matches that search.</div></div>';return}
   v.innerHTML=`<div class="list">${list.map(thingRow).join("")}</div>`;
+  loadThumbs();
 }
 function thingRow(t){
   const s=thStatus(t),bits=[];
@@ -1198,6 +1226,7 @@ function thingCard(t){
     ${t.warrantyNotes?`<div class="tsec"><h3>Warranty</h3><div class="gtext">${esc(t.warrantyNotes)}</div></div>`:""}
     ${t.specs?`<div class="tsec"><h3>Specs</h3><div class="gtext">${esc(t.specs)}</div></div>`:""}
     ${t.note?`<div class="tsec"><h3>Notes</h3><div class="gtext">${esc(t.note)}</div></div>`:""}
+    ${photoSection(t)}
     ${ml||rl?`<div class="tlinks">${ml?`<a class="btn ghost" href="${esc(ml)}" target="_blank" rel="noopener">Open manual</a>`:""}${rl?`<a class="btn ghost" href="${esc(rl)}" target="_blank" rel="noopener">Open receipt</a>`:""}</div>`:""}
     <div class="actions"><button class="btn" type="button" data-tact="edit">Edit</button><button class="btn ghost" type="button" data-tact="close">Close</button></div>
   </div>`;
@@ -1247,6 +1276,8 @@ $("#thList").addEventListener("click",async e=>{
   if(a==="close"){openThing=editThing=null;render();return}
   if(a==="edit"){editThing=t.id;render();return}
   if(a==="canceledit"){editThing=null;render();return}
+  if(a==="addphoto"){photoTarget=t.id;photoKind=btn.dataset.kind||"photo";$("#thFile").click();return}
+  if(a==="viewphoto"){openViewer(t,btn.dataset.pid);return}
   if(a==="askdel"){el.querySelector("[data-confirm]").hidden=false;btn.hidden=true;return}
   if(a==="del"){const prev=clone(t);openThing=editThing=null;if(await run("deleteThing",{id:t.id}))toast(`"${t.name}" deleted`,{kind:"thing",prev})}
 });
@@ -1260,6 +1291,91 @@ $("#thList").addEventListener("submit",async e=>{
   if(!(await confirmSensitive([next.name,next.boughtFrom,next.note].join("\n"))))return;
   editThing=null;if(await run("saveThing",{thing:next}))toast("Saved");
 });
+
+/* ---------- photos of manuals and receipts (saved in the owner's Google Drive) ---------- */
+const PKIND={manual:"Manual",receipt:"Receipt",photo:"Photo"};
+const photoURL={}, photoMime={};
+let photoTarget=null, photoKind="manual", viewing=null, thumbBusy=false;
+function photoSection(t){
+  const ps=Array.isArray(t.photos)?t.photos:[];
+  const tiles=ps.map(p=>{const lab=PKIND[p.kind]||"Photo";
+    return `<button class="pthumb" type="button" data-tact="viewphoto" data-pid="${esc(p.id)}" aria-label="Open ${esc(lab)} photo">${p.mime==="application/pdf"?`<span class="pdf">PDF</span>`:`<img data-photo="${esc(p.id)}" alt="">`}<span class="plab">${esc(lab)}</span></button>`}).join("");
+  return `<div class="tsec"><h3>Photos${ps.length?" · "+ps.length:""}</h3>
+    ${ps.length?`<div class="pgrid">${tiles}</div>`:`<p class="note" style="margin:0">No photos yet. Add the manual pages or the receipt so they're kept with this item.</p>`}
+    <div class="tlinks" style="margin-top:10px"><button class="btn ghost" type="button" data-tact="addphoto" data-kind="manual">Add manual photos</button><button class="btn ghost" type="button" data-tact="addphoto" data-kind="receipt">Add receipt</button></div></div>`;
+}
+function b64ToBlob(b64,mime){const bin=atob(b64),a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new Blob([a],{type:mime})}
+async function photoBlobURL(id){
+  if(photoURL[id])return photoURL[id];
+  const j=await api("photo",{fileId:id});
+  photoMime[id]=j.mime;photoURL[id]=URL.createObjectURL(b64ToBlob(j.data,j.mime));
+  return photoURL[id];
+}
+async function loadThumbs(){
+  if(thumbBusy)return;thumbBusy=true;
+  try{
+    for(const img of Array.from(document.querySelectorAll("#thList img[data-photo]"))){
+      if(img.getAttribute("src"))continue;
+      try{img.src=await photoBlobURL(img.dataset.photo)}catch(e){img.closest(".pthumb").classList.add("broken")}
+    }
+  }finally{thumbBusy=false}
+  if(Array.from(document.querySelectorAll("#thList img[data-photo]")).some(i=>!i.getAttribute("src")&&!i.closest(".broken")))loadThumbs();
+}
+function readAsB64(blob){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(",")[1]);r.onerror=()=>rej(r.error);r.readAsDataURL(blob)})}
+async function shrinkImage(file){
+  // Makes phone photos smaller (longest side 1600px) but keeps manual text sharp enough to read.
+  try{
+    const bmp=await createImageBitmap(file,{imageOrientation:"from-image"});
+    const s=Math.min(1,1600/Math.max(bmp.width,bmp.height));
+    const c=document.createElement("canvas");c.width=Math.round(bmp.width*s);c.height=Math.round(bmp.height*s);
+    c.getContext("2d").drawImage(bmp,0,0,c.width,c.height);
+    const blob=await new Promise(r=>c.toBlob(r,"image/jpeg",0.82));
+    if(blob)return{mime:"image/jpeg",data:await readAsB64(blob)};
+  }catch(e){}
+  return null;
+}
+async function uploadPhotos(files){
+  const t=things.find(x=>x.id===photoTarget);if(!t||!files.length)return;
+  let done=0,failed=0;
+  for(const f of files){
+    toast(`Saving photo ${done+failed+1} of ${files.length}…`);
+    let payload=null;
+    if(f.type==="application/pdf"||/\.pdf$/i.test(f.name)){
+      if(f.size>8*1024*1024){failed++;continue}
+      payload={mime:"application/pdf",data:await readAsB64(f)};
+    }else{
+      payload=await shrinkImage(f);
+      if(!payload&&/heic|heif/i.test(f.type+f.name)&&f.size<=8*1024*1024)payload={mime:"image/heic",data:await readAsB64(f)};
+    }
+    if(!payload){failed++;continue}
+    try{setData(await api("addPhoto",Object.assign({thingId:t.id,kind:photoKind},payload)));done++}
+    catch(e){failed++;showErr(e)}
+  }
+  toast(done?`${done} photo${done>1?"s":""} saved${failed?`, ${failed} couldn't be added`:""}`:"Couldn't add those files. Use photos or PDFs.");
+}
+$("#thFile").addEventListener("change",async e=>{const files=Array.from(e.target.files||[]);e.target.value="";busy=true;try{await uploadPhotos(files)}finally{busy=false}});
+async function openViewer(t,pid){
+  const p=(t.photos||[]).find(x=>x.id===pid);if(!p)return;
+  viewing={thing:t.id,id:pid};
+  const v=$("#pview");v.hidden=false;
+  $("#pvTitle").textContent=(PKIND[p.kind]||"Photo")+" · "+t.name;
+  $("#pvMeta").textContent="Added "+fmt(p.added)+(p.by?" by "+p.by:"");
+  $("#pvBody").innerHTML='<p class="note">Loading…</p>';$("#pvConfirm").hidden=true;$("#pvDel").hidden=false;
+  try{const u=await photoBlobURL(pid);if(!viewing||viewing.id!==pid)return;
+    $("#pvBody").innerHTML=p.mime==="application/pdf"||photoMime[pid]==="application/pdf"
+      ?`<a class="btn" href="${u}" target="_blank" rel="noopener">Open the PDF</a>`
+      :`<img src="${u}" alt="${esc(PKIND[p.kind]||"Photo")}">`;
+    const im=$("#pvBody img");if(im)im.addEventListener("click",()=>im.classList.toggle("full"));
+  }catch(e){$("#pvBody").innerHTML='<p class="note">Couldn\'t load this photo. Check your connection and try again.</p>'}
+}
+function closeViewer(){viewing=null;$("#pview").hidden=true;$("#pvBody").innerHTML=""}
+$("#pvClose").addEventListener("click",closeViewer);
+$("#pview").addEventListener("click",e=>{if(e.target.id==="pview")closeViewer()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#pview").hidden)closeViewer()});
+$("#pvDel").addEventListener("click",()=>{$("#pvConfirm").hidden=false;$("#pvDel").hidden=true});
+$("#pvNo").addEventListener("click",()=>{$("#pvConfirm").hidden=true;$("#pvDel").hidden=false});
+$("#pvYes").addEventListener("click",async()=>{if(!viewing)return;const v=viewing;closeViewer();
+  if(await run("deletePhoto",{thingId:v.thing,fileId:v.id})){if(photoURL[v.id]){URL.revokeObjectURL(photoURL[v.id]);delete photoURL[v.id]}toast("Photo deleted")}});
 
 
 /* ================= MAP (v2) =================
