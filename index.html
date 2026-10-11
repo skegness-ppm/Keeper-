@@ -749,6 +749,8 @@ function setData(j){
   if(openId&&!items.some(i=>i.id===openId))openId=null;
   if(openBill&&!bills.some(b=>b.id===openBill))openBill=null;
   if(j.things)things=j.things;
+  if(j.planKey&&j.planKey!==planKey){planKey=j.planKey;try{localStorage.setItem("whk_pk",planKey)}catch(_){}
+    if(planFailed){planFailed=false;const im=$("#mapImg");if(im)im.dataset.map=""}}
   if(openThing&&!things.some(t=>t.id===openThing))openThing=editThing=null;
   render();
 }
@@ -1418,17 +1420,17 @@ $("#pvYes").addEventListener("click",async()=>{if(!viewing)return;const v=viewin
    x and y (0–1 across the plan) and an icon. Pin colour = traffic light on the due date. */
 const M=(xm,ym)=>[+((xm+8)/33).toFixed(4),+((ym+15)/39).toFixed(4)]; // outside plan: metres -> 0..1
 const MAPDEFS=[
-  {key:"outside",label:"Outside",img:"plan-outside.svg",ratio:1560/1320,area:"Garden",
+  {key:"outside",label:"Outside",img:"plans/outside.bin",mime:"image/svg+xml",ratio:1560/1320,area:"Garden",
    rooms:[["Timber shed",...M(21,0.2),...M(23.8,7.6)],["Small shed",...M(17.6,-13.9),...M(20.1,-11.7)],["Log store & sheds",...M(20.4,-13.9),...M(23.2,-10.9)],
      ["Pond",...M(16.2,8.25),...M(18.9,10.15)],["Patio",...M(16.2,8),...M(24,14.8)],["Conservatory (outside)",...M(0.1,0),...M(6.7,3.58)],
      ["Decking",...M(6.2,3.58),...M(10.2,6.98)],["House (outside)",...M(0.12,3.58),...M(8.77,11.9)],["Annex & garage (outside)",...M(8.77,6.98),...M(16.2,14.8)],
      ["Side lawn",...M(16.2,-1),...M(24,8)],["Side path & gates",...M(-7,3),...M(0.12,8.9)],["Front lawn",...M(10.8,14.8),...M(24,22.2)],
      ["Driveway",...M(-7,8.6),...M(10.8,22.2)],["Back garden",...M(-7,-14),...M(24,8.6)],["Road side",...M(-8,22.2),...M(25,24)]]},
-  {key:"ground",label:"Ground floor",img:"plan-ground.png",ratio:2076/1500,area:"House",
+  {key:"ground",label:"Ground floor",img:"plans/ground.bin",mime:"image/webp",ratio:2076/1500,area:"House",
    rooms:[["Conservatory",.069,.03,.692,.295],["Utility",.695,.295,.965,.55],["Kitchen / dining",.035,.295,.695,.55],["Hall & stairs",.44,.55,.575,.97],["Lounge",.035,.55,.44,.86],["Snug",.575,.55,.965,.86]]},
-  {key:"annex",label:"Annex & garage",img:"plan-annex.png",ratio:1676/1500,area:"House",
+  {key:"annex",label:"Annex & garage",img:"plans/annex.bin",mime:"image/webp",ratio:1676/1500,area:"House",
    rooms:[["Shower room",.626,0.133,.931,0.246],["Study",.052,0.133,.47,0.453],["Study",.47,0.133,.626,0.246],["Garage",.29,0.62,.931,0.947],["Annex",.26,0.246,.931,0.62]]},
-  {key:"first",label:"First floor",img:"plan-first.png",ratio:1588/1600,area:"House",
+  {key:"first",label:"First floor",img:"plans/first.bin",mime:"image/webp",ratio:1588/1600,area:"House",
    rooms:[["Landing",.33,.415,.725,.505],["Landing",.48,.505,.59,.91],["Bathroom",.5,.19,.725,.405],["En-suite",.735,.19,.965,.505],["Bedroom 3",.097,.19,.49,.505],["Bedroom 2",.097,.516,.472,.91],["Bedroom 1",.6,.516,.965,.91]]}
 ];
 const MAPBY={};MAPDEFS.forEach(m=>MAPBY[m.key]=m);
@@ -1584,13 +1586,33 @@ function endPtr(e){
 $("#stage").addEventListener("pointerup",endPtr);
 $("#stage").addEventListener("pointercancel",endPtr);
 
+
+/* ---------- house plans ----------
+   The plans are kept scrambled (AES-GCM) in the public app files, so nobody browsing
+   GitHub can see the layout of the house. The key only comes from the Google script,
+   which only answers phones the owner has approved. */
+let planKey="",planFailed=false;const planURL={};
+try{planKey=localStorage.getItem("whk_pk")||""}catch(e){}
+async function planBlobURL(m){
+  if(planURL[m.key])return planURL[m.key];
+  if(!planKey||!(window.crypto&&crypto.subtle))throw new Error("nokey");
+  const raw=new Uint8Array(await (await fetch(m.img,{cache:"force-cache"})).arrayBuffer());
+  const kb=new Uint8Array(planKey.match(/../g).map(h=>parseInt(h,16)));
+  const k=await crypto.subtle.importKey("raw",kb,"AES-GCM",false,["decrypt"]);
+  const plain=await crypto.subtle.decrypt({name:"AES-GCM",iv:raw.slice(0,12)},k,raw.slice(12));
+  return planURL[m.key]=URL.createObjectURL(new Blob([plain],{type:m.mime}));
+}
+async function showPlan(m,img){
+  try{const u=await planBlobURL(m);if(img.dataset.map===m.key){img.src=u;fitView()}}
+  catch(e){planFailed=true;if(img.dataset.map===m.key){img.removeAttribute("src");toast("The plan needs the latest Google script update")}}
+}
 /* ---------- render ---------- */
 function renderMap(){
   $("#oldBackend").hidden=!oldBackend;
   $("#floors").innerHTML=MAPDEFS.map(m=>{const l=onMap(m.key),r=l.filter(o=>light(o.i).c==="red").length;
     return `<button class="floor" type="button" role="tab" data-map="${m.key}" aria-pressed="${m.key===curMap}">${esc(m.label)}<span class="fc">${l.length}</span>${r?`<span class="fr" title="${r} overdue">${r}</span>`:""}</button>`}).join("");
   const m=MAPBY[curMap],img=$("#mapImg");
-  if(img.dataset.map!==curMap){img.dataset.map=curMap;img.alt=m.label+" plan";img.src=m.img;fitView()}
+  if(img.dataset.map!==curMap){img.dataset.map=curMap;img.alt=m.label+" plan";showPlan(m,img)}
   renderPins();
   const list=onMap(curMap).map(o=>({...o,l:light(o.i)})).sort((a,b)=>a.l.n-b.l.n||a.i.title.localeCompare(b.i.title));
   $("#mapList").innerHTML=`<section class="group"><h2>On the ${esc(m.label.toLowerCase())} map · ${list.length}</h2><div class="list">${list.length?list.map(o=>
